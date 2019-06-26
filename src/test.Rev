@@ -1,0 +1,27 @@
+
+n_tips = 20
+n_branches = 2 * n_tips - 3
+for (i in 1:n_tips) {
+    taxa[i] = taxon("t" + i)
+}
+for (i in 1:n_branches) {
+    branch_lengths[i] ~ dnExponential(10)
+}
+topology ~ dnUniformTopology(taxa)
+tree := treeAssembly(topology, branch_lengths)
+
+
+er_prior <- v(1,1,1,1,1,1)
+er ~ dnDirichlet(er_prior)
+pi_prior <- v(1,1,1,1)
+pi ~ dnDirichlet(pi_prior)
+Q := fnGTR(er, pi)
+
+ctmc ~ dnPhyloCTMC(tree=tree, Q=Q, type="DNA", nSites=100)
+
+ctmc.setHomeologPhase("t1", "A")
+ctmc.setHomeologPhase("t20", "B")
+
+m[1] = mvHomeologPhase(ctmc, "A", "B")
+#m[1] = mvCharacterHistory(ctmc, Q)
+
