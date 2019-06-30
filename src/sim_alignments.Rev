@@ -1,0 +1,22 @@
+
+seq_length = 20
+num_loci = 4
+tree = readTrees("data/tree.tre")[1]
+tree.rescale(0.1)
+
+for (i in 1:num_loci) {
+
+    er_prior <- v(1,1,1,1,1,1)
+    er ~ dnDirichlet(er_prior)
+    pi_prior <- v(1,1,1,1)
+    pi ~ dnDirichlet(pi_prior)
+    Q := fnGTR(er, pi)
+
+    ctmc ~ dnPhyloCTMC(tree=tree, Q=Q, type="DNA", nSites=seq_length)
+    
+    ctmc.setTaxonName("A", "seq_A")
+    ctmc.setTaxonName("B", "seq_B")
+
+    writeFasta("data/alignment" + i + ".fasta", ctmc)
+
+}

@@ -1,0 +1,70 @@
+
+seq_length = 500
+num_loci = 4
+tree_sim = readTrees("data/tree.tre")[1]
+
+mvi = 0
+
+n_tips = 5
+n_branches = 2 * n_tips - 3
+for (i in 1:n_branches) {
+    branch_lengths[i] ~ dnExponential(10)
+    moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=2)
+}
+topology ~ dnUniformTopology(tree_sim.taxa())
+moves[++mvi] = mvNNI(topology, weight=20.0)
+moves[++mvi] = mvSPR(topology, weight=20.0)
+tree := treeAssembly(topology, branch_lengths)
+
+for (i in 1:num_loci) {
+    
+    data[i] = readDiscreteCharacterData("data/alignment" + i + ".fasta")
+    if (i == 1 || i == 2) {
+    data[i].setHomeologPhase("seq_A", "A")
+    data[i].setHomeologPhase("seq_B", "B")
+    } else {
+    data[i].setHomeologPhase("seq_B", "A")
+    data[i].setHomeologPhase("seq_A", "B")
+    }
+
+    er_prior <- v(1,1,1,1,1,1)
+    er[i] ~ dnDirichlet(er_prior)
+    moves[++mvi] = mvSimplexElementScale(er[i], weight=3)
+
+    pi_prior <- v(1,1,1,1)
+    pi[i] ~ dnDirichlet(pi_prior)
+    moves[++mvi] = mvSimplexElementScale(pi[i], weight=3)
+
+    Q[i] := fnGTR(er[i], pi[i])
+
+    ctmc[i] ~ dnPhyloCTMC(tree=tree, Q=Q[i], type="DNA")
+#    if (i == 1) {
+#        ctmc[i].clamp(data[i])
+#    } else {
+        #ctmc[i].setValue(data[i])
+        ctmc[i].clamp(data[i])
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "A", "B", weight=5)
+#    }
+    #ctmc[i].clamp(data[i])
+    #if (i != 1) {
+    #    moves[++mvi] = mvHomeologPhase(ctmc[i], "A", "B", weight=5)
+    #}
+}
+
+mymodel = model(Q)
+
+monitors[1] = mnModel(filename="output/phasing.log", printgen=1)
+monitors[2] = mnFile(filename="output/phasing.trees", printgen=1, tree)
+monitors[3] = mnScreen(printgen=1)
+monitors[4] = mnHomeologPhase(filename="output/phase1.log", printgen=1, ctmc[1])
+monitors[5] = mnHomeologPhase(filename="output/phase2.log", printgen=1, ctmc[2])
+monitors[6] = mnHomeologPhase(filename="output/phase3.log", printgen=1, ctmc[3])
+monitors[7] = mnHomeologPhase(filename="output/phase4.log", printgen=1, ctmc[4])
+
+mymcmc = mcmc(mymodel, monitors, moves)
+mymcmc.run(generations=500)
+    
+treetrace = readTreeTrace("output/phasing.trees", treetype="clock", burnin=0.25)
+map_tree = mapTree(treetrace,"output/phasing.tree")
+
+mymcmc.operatorSummary()
