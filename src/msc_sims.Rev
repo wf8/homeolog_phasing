@@ -1,0 +1,88 @@
+#
+# Simulate species tree under birth-death process and gene trees under
+# the multi-species coalescent. Then simulate gene sequences over the 
+# gene trees.
+#
+shared_gene_tree = FALSE
+seq_length = 800
+branch_rate = 0.01
+num_loci = 4
+num_species = 20
+pop_size = 2
+
+# set up taxa for species tree
+# genomes A and B for a tetraploid
+species[1] = taxon(taxonName="tetra_A", speciesName="tetra_A")
+species[2] = taxon(taxonName="tetra_B", speciesName="tetra_B")
+# genomes A, B, and C for a hexaploid
+species[3] = taxon(taxonName="hexa_A", speciesName="hexa_A")
+species[4] = taxon(taxonName="hexa_B", speciesName="hexa_B")
+species[5] = taxon(taxonName="hexa_C", speciesName="hexa_C")
+# the rest are diploid lineages
+for (i in 6:num_species) {
+    species[i] = taxon(taxonName="dip_" + i, speciesName="dip_" + i)
+}
+# set up taxa for gene trees: two individuals from each species tree tip
+individuals[1] = taxon(taxonName="tetra_A_1", speciesName="tetra_A")
+individuals[2] = taxon(taxonName="tetra_A_2", speciesName="tetra_A")
+individuals[3] = taxon(taxonName="tetra_B_1", speciesName="tetra_B")
+individuals[4] = taxon(taxonName="tetra_B_2", speciesName="tetra_B")
+individuals[5] = taxon(taxonName="hexa_A_1", speciesName="hexa_A")
+individuals[6] = taxon(taxonName="hexa_A_2", speciesName="hexa_A")
+individuals[7] = taxon(taxonName="hexa_B_1", speciesName="hexa_B")
+individuals[8] = taxon(taxonName="hexa_B_2", speciesName="hexa_B")
+individuals[9] = taxon(taxonName="hexa_C_1", speciesName="hexa_C")
+individuals[10] = taxon(taxonName="hexa_C_2", speciesName="hexa_C")
+for (i in 6:num_species) {
+    for (j in 1:2) {
+        ind_index = ((i - 1) * 2) + j
+        individuals[ind_index] = taxon(taxonName="dip_" + i + "_" + j, speciesName="dip_" + i)
+    }
+}
+
+root_age <- 50
+sampling_fraction <- 0.1
+speciation <- 0.2
+extinction <- 0.01
+
+species_tree ~ dnBDP(lambda=speciation, 
+                     mu=extinction, 
+                     rootAge=root_age, 
+                     rho=sampling_fraction, 
+                     taxa=species)
+write(species_tree, filename="data/species_tree.tree")
+
+for (i in 1:num_loci) {
+
+    # simulate gene tree
+    if (shared_gene_tree == FALSE) {
+        gene_tree[i] ~ dnMultiSpeciesCoalescent(speciesTree=species_tree, 
+                                                Ne=pop_size, 
+                                                taxa=individuals)
+    } else {
+        if (i == 1) {
+            gene_tree[i] ~ dnMultiSpeciesCoalescent(speciesTree=species_tree, 
+                                                    Ne=pop_size, 
+                                                    taxa=individuals)
+        } else {
+            gene_tree[i] := gene_tree[1]
+        }
+    }
+    write(gene_tree[i], filename="data/gene_tree" + i + ".tree")
+
+    # model of molecular evolution
+    er_prior <- v(1,1,1,1,1,1)
+    er ~ dnDirichlet(er_prior)
+    pi_prior <- v(1,1,1,1)
+    pi ~ dnDirichlet(pi_prior)
+    Q := fnGTR(er, pi)
+
+    ctmc ~ dnPhyloCTMC(tree=gene_tree[i], 
+                       Q=Q, 
+                       type="DNA", 
+                       nSites=seq_length, 
+                       branchRates=branch_rate)
+
+    writeFasta("data/alignment" + i + ".fasta", ctmc)
+
+}
