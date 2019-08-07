@@ -3,7 +3,7 @@
 # the multi-species coalescent. Then simulate gene sequences over the 
 # gene trees.
 #
-shared_gene_tree = FALSE
+shared_gene_tree = TRUE
 seq_length = 800
 branch_rate = 0.01
 num_loci = 4
