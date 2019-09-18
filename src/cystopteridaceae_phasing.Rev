@@ -166,7 +166,7 @@ for (i in 1:num_loci) {
     ctmc[i].clamp(data[i])
 }
 
-w = 3/29
+w = 10/29
 for (i in 1:num_loci) {
 
     # switch phasing proposals
@@ -215,7 +215,7 @@ monitors[6] = mnHomeologPhase(filename=output_file + "_phase3.log", printgen=1, 
 monitors[7] = mnHomeologPhase(filename=output_file + "_phase4.log", printgen=1, ctmc[4])
 
 mymcmc = mcmc(mymodel, monitors, moves)
-mymcmc.run(generations=500)
+mymcmc.run(generations=5000)
     
 treetrace = readTreeTrace(output_file + ".trees", treetype="clock", burnin=0.25)
 map_tree = mapTree(treetrace, output_file + ".tree")
