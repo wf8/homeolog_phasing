@@ -2,13 +2,17 @@
 #
 #
 num_loci = 4
-
 mvi = 0
 mni = 0
 
+
+
+
+
+
 for (i in 1:num_loci) {
     
-    data[i] = readDiscreteCharacterData("data/alignment" + i + ".fasta")
+    data[i] = readDiscreteCharacterData("data" + sim_num + "/alignment" + i + ".fasta")
     
     # for each polyploid individual assign an initial phase
     if (FALSE) {
@@ -16,31 +20,31 @@ for (i in 1:num_loci) {
         data[i].setHomeologPhase("tetra_A_1", "tetra_1_1")
         data[i].setHomeologPhase("tetra_B_1", "tetra_2_1")
 
-        data[i].setHomeologPhase("tetra_A_2", "tetra_1_2")
-        data[i].setHomeologPhase("tetra_B_2", "tetra_2_2")
+#        data[i].setHomeologPhase("tetra_A_2", "tetra_1_2")
+#        data[i].setHomeologPhase("tetra_B_2", "tetra_2_2")
         
         data[i].setHomeologPhase("hexa_A_1", "hexa_X_1")
         data[i].setHomeologPhase("hexa_B_1", "hexa_Y_1")
         data[i].setHomeologPhase("hexa_C_1", "hexa_Z_1")
 
-        data[i].setHomeologPhase("hexa_A_2", "hexa_X_2")
-        data[i].setHomeologPhase("hexa_B_2", "hexa_Y_2")
-        data[i].setHomeologPhase("hexa_C_2", "hexa_Z_2")
+#        data[i].setHomeologPhase("hexa_A_2", "hexa_X_2")
+#        data[i].setHomeologPhase("hexa_B_2", "hexa_Y_2")
+#        data[i].setHomeologPhase("hexa_C_2", "hexa_Z_2")
     } else {
         # initialize phase incorrectly
         data[i].setHomeologPhase("tetra_A_1", "tetra_Y_1")
         data[i].setHomeologPhase("tetra_B_1", "tetra_X_1")
 
-        data[i].setHomeologPhase("tetra_A_2", "tetra_X_2")
-        data[i].setHomeologPhase("tetra_B_2", "tetra_Y_2")
+#        data[i].setHomeologPhase("tetra_A_2", "tetra_X_2")
+#        data[i].setHomeologPhase("tetra_B_2", "tetra_Y_2")
         
         data[i].setHomeologPhase("hexa_A_1", "hexa_Z_1")
         data[i].setHomeologPhase("hexa_B_1", "hexa_X_1")
         data[i].setHomeologPhase("hexa_C_1", "hexa_Y_1")
 
-        data[i].setHomeologPhase("hexa_A_2", "hexa_Y_2")
-        data[i].setHomeologPhase("hexa_B_2", "hexa_Z_2")
-        data[i].setHomeologPhase("hexa_C_2", "hexa_X_2")
+#        data[i].setHomeologPhase("hexa_A_2", "hexa_Y_2")
+#        data[i].setHomeologPhase("hexa_B_2", "hexa_Z_2")
+#        data[i].setHomeologPhase("hexa_C_2", "hexa_X_2")
     }
 }
 
@@ -72,32 +76,32 @@ for (i in 1:num_loci) {
      
     # moves for each polyploid individual
     moves[++mvi] = mvHomeologPhase(ctmc[i], "tetra_X_1", "tetra_Y_1", weight=5)
-    moves[++mvi] = mvHomeologPhase(ctmc[i], "tetra_X_2", "tetra_Y_2", weight=5)
+#    moves[++mvi] = mvHomeologPhase(ctmc[i], "tetra_X_2", "tetra_Y_2", weight=5)
 
     moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_X_1", "hexa_Y_1", weight=5)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_X_1", "hexa_Z_1", weight=5)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_Y_1", "hexa_Z_1", weight=5)
 
-    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_X_2", "hexa_Y_2", weight=5)
-    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_X_2", "hexa_Z_2", weight=5)
-    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_Y_2", "hexa_Z_2", weight=5)
+#    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_X_2", "hexa_Y_2", weight=5)
+#    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_X_2", "hexa_Z_2", weight=5)
+#    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_Y_2", "hexa_Z_2", weight=5)
 
 }
 
 mymodel = model(Q[1])
 
-monitors[++mni] = mnModel(filename="output/phasing.log", printgen=1)
-monitors[++mni] = mnFile(filename="output/phasing.trees", printgen=1, tree)
+monitors[++mni] = mnModel(filename="output" + sim_num + "/phasing.log", printgen=1)
+monitors[++mni] = mnFile(filename="output" + sim_num + "/phasing.trees", printgen=1, tree)
 monitors[++mni] = mnScreen(printgen=1)
 for (i in 1:num_loci) {
-    monitors[++mni] = mnHomeologPhase(filename="output/phase" + i + ".log", printgen=1, ctmc[i])
+    monitors[++mni] = mnHomeologPhase(filename="output" + sim_num + "/phase" + i + ".log", printgen=1, ctmc[i])
 }
 
 mymcmc = mcmc(mymodel, monitors, moves)
 mymcmc.run(generations=2000)
     
-treetrace = readTreeTrace("output/phasing.trees", treetype="clock", burnin=0.25)
-map_tree = mapTree(treetrace,"output/phasing.tree")
+treetrace = readTreeTrace("output" + sim_num + "/phasing.trees", treetype="clock", burnin=0.25)
+map_tree = mapTree(treetrace,"output" + sim_num + "/phasing.tree")
 
 mymcmc.operatorSummary()
 quit()
