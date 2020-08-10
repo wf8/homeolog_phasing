@@ -1,0 +1,7 @@
+The "firstVersions" alignments are the ones that CJR sent to WF originally. In them, the
+regions that were set for exclusion have not been excluded.
+
+CJR realized this on Aug9, and made the new set of alignments that have those regions
+excluded (otherwise the two sets of alignments are the same)
+
+./abioscripts --seqconcat --applyexcludes --outputsingles --filenames *.nex --outputfile abio_outputfiles
