@@ -1,2 +1,0 @@
-I made a mistake in the scripts and output the MAP and MCC trees to the same file, so these 
-are MCC trees, even though they're called MAP trees
