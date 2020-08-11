@@ -41,8 +41,8 @@ for (i in 1:num_loci) {
     data[i].setHomeologPhase("C_mon_7943_B",  "C_mon_7943_B")
     data[i].setHomeologPhase("C_pelA_6055_A", "C_pelA_6055_A") 
     data[i].setHomeologPhase("C_pelA_6055_B", "C_pelA_6055_B") 
-    #data[i].setHomeologPhase("C_pro_6359_A",  "C_pro_6359_A") #CJR - treating these alleles as separate individuals; this is a diploid
-    #data[i].setHomeologPhase("C_pro_6359a_A", "C_pro_6359a_A")
+    data[i].setHomeologPhase("C_pro_6359_A",  "C_pro_6359_A") 
+    data[i].setHomeologPhase("C_pro_6359a_A", "C_pro_6359a_A")
     data[i].setHomeologPhase("C_sudB_8674_A", "C_sudB_8674_A") 
     data[i].setHomeologPhase("C_sudB_8674_B", "C_sudB_8674_B") 
     data[i].setHomeologPhase("C_tas_6379_A",  "C_tas_6379_A")
@@ -53,10 +53,6 @@ for (i in 1:num_loci) {
     data[i].setHomeologPhase("C_uta_6848_B",  "C_uta_6848_B") 
     data[i].setHomeologPhase("G_con_6979_A",  "G_con_6979_A") 
     data[i].setHomeologPhase("G_con_6979_B",  "G_con_6979_B") 
-
-    data[i].setHomeologPhase("G_dis_7751_A",  "G_dis_7751_A")  #CJR - setting this one to swap, since it's not clear whether they are alleles or not
-    data[i].setHomeologPhase("G_dis_7751a_A",  "G_dis_7751a_A") 
-
     data[i].setHomeologPhase("G_oyaC_8739_A", "G_oyaC_8739_A") 
     data[i].setHomeologPhase("G_oyaC_8739_B", "G_oyaC_8739_B") 
     data[i].setHomeologPhase("G_rem_4862_A",  "G_rem_4862_A") 
@@ -174,7 +170,7 @@ w = 10/29
 for (i in 1:num_loci) {
 
     # switch phasing proposals
-    #moves[++mvi] = mvHomeologPhase(ctmc[i], "C_pro_6359_A", "C_pro_6359a_A", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_pro_6359_A", "C_pro_6359a_A", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "A_tai_6137_A", "A_tai_6137_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "A_tenC_8745_A", "A_tenC_8745_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "C_fraA_7009_A", "C_fraA_7009_B", weight=w)
@@ -186,12 +182,11 @@ for (i in 1:num_loci) {
     moves[++mvi] = mvHomeologPhase(ctmc[i], "C_tenu_6387_A", "C_tenu_6387_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "C_uta_6848_A", "C_uta_6848_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "G_con_6979_A", "G_con_6979_B", weight=w)
-    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dis_7751a_A", "G_dis_7751_A", weight=w) # CJR - adding this one to swapping
     moves[++mvi] = mvHomeologPhase(ctmc[i], "G_oyaC_8739_A", "G_oyaC_8739_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "G_rem_4862_A", "G_rem_4862_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "G_rob_7945_A", "G_rob_7945_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "A_tenB_8704_A", "A_tenB_8704_B", weight=w)
-    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_dia_6380_A", "C_dia_6380_B", weight=w) # CJR - there was a typo here, _A was being switched with _A ...
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_dia_6380_A", "C_dia_6380_A", weight=w)
 
     moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystC_7974_A", "xCystC_7974_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystC_7974_A", "xCystG_7974_A", weight=w)
