@@ -42,12 +42,12 @@
 # hp_tip2   locus1  seq3        0.65
 #
 
-
+args=commandArgs(trailingOnly=TRUE)
 # directory that contains the MCMC log files
-input_dir = 'output'
-
+#input_dir = 'output'
+input_dir = args[1]
 # directory to write the summary files
-output_dir = 'output'
+output_dir = input_dir
 
 # names of the loci in the log file
 loci = c('1', '2', '3', '4')
