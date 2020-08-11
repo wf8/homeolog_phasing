@@ -1,16 +1,16 @@
 #
 # Performs homeolog phasing on the Cystopteridaceae Rothfels et al. 2017 dataset.
-#
 # Will Freyman
 #
+# Updated 20200810, CJR
 
 output_file = "output/cystopteridaceae"
 
 # read in data
-alignments = ["data/cystopteridaceae/APP_alloPPnet_version_reduced.nex",
-               "data/cystopteridaceae/GAP_alloPPnet_version_reduced.nex",
-               "data/cystopteridaceae/IBR_alloPPnet_version_reduced.nex",
-               "data/cystopteridaceae/PGI_alloPPnet_version_reduced.nex"]
+alignments = [ "../data/cystopteridaceae/finalVersions/APP_alloPPnet_version_reduced.nex",
+               "../data/cystopteridaceae/finalVersions/GAP_alloPPnet_version_reduced.nex",
+               "../data/cystopteridaceae/finalVersions/IBR_alloPPnet_version_reduced.nex",
+               "../data/cystopteridaceae/finalVersions/PGI_alloPPnet_version_reduced.nex"]
 num_loci = alignments.size()
 
 for (i in 1:num_loci) {
