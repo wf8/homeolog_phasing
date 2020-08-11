@@ -15,7 +15,7 @@
 shared_gene_tree = TRUE
 seq_length = 800
 branch_rate = 0.01
-num_loci = 40
+num_loci = 4
 num_species = 20
 #pop_size = 100
 
