@@ -4,15 +4,17 @@ import pandas as pd
 # Requires MESS: https://github.com/tgvaughan/mess
 # Requires ETE3: etetoolkit.org
 
-
+# Run this from within the sims directory, with the types as separate directories
 
 treetypes = ["unlinked","shared"]
 nindv = [1,2,10,50,100]
 numsims = 100
 tetra_labels = ["tetra_A","tetra_B"]
+tetra_species = ["tetra_X_1","tetra_Y_1"]
 hexa_labels = ["hexa_A","hexa_B","hexa_C"]
+hexa_species = ["hexa_X_1","hexa_Y_1","hexa_Z_1"]
 
-sys.stdout.write("Type\tnIndiv\tSimNum\tTetraDist\tHexaABDist\tHexaACDist\tHexaBCDist\tTetraAMinDip\tTetraBMinDip\tHexaAMinDip\tHexaBMinDip\tHexaCMinDip\tESS\tAvgTetraPP\tAvgHexaPP\n")
+sys.stdout.write("Type\tnIndiv\tSimNum\tTetraDist\tHexaABDist\tHexaACDist\tHexaBCDist\tTetraAMinDip\tTetraBMinDip\tHexaAMinDip\tHexaBMinDip\tHexaCMinDip\tESS\tAvgTetraPP\tAvgHexaPP\tMinTetraPP\tMinHexaPP\tTetraCorrect\tHexaCorrect\n")
 for t in treetypes:
     os.chdir("{}_gene_trees".format(t))
     for n in nindv:
@@ -57,18 +59,37 @@ for t in treetypes:
             # posterior probability of phase calls
             tetra_output_fn = "joint_phase_probs_tetraploid_1.csv"
             tetra_probs = pd.read_csv(tetra_output_fn)
-            avgTetraPP = tetra_probs.groupby("locus").max().mean()["joint_prob"]
+            tetraBestLoc = tetra_probs.groupby("locus")["joint_prob"].idxmax()
+            tetraJMAPs = tetra_probs.loc[tetraBestLoc]
+            avgTetraPP = tetraJMAPs.mean()["joint_prob"]
+            minTetraPP = tetraJMAPs.min()["joint_prob"]
+            if len(tetraJMAPs[tetra_species].apply(lambda x: ''.join(x),axis=1).unique()) == 1:
+                tetraCorrect="True"
+            else:
+                tetraCorrect="False"
+            
             hexa_output_fn =  "joint_phase_probs_hexaploid_1.csv"
             hexa_probs = pd.read_csv(hexa_output_fn)
-            avgHexaPP = hexa_probs.groupby("locus").max().mean()["joint_prob"]
+            hexaBestLoc = hexa_probs.groupby("locus")["joint_prob"].idxmax()
+            hexaJMAPs = hexa_probs.loc[hexaBestLoc]
+            avgHexaPP = hexaJMAPs.mean()["joint_prob"]
+            minHexaPP = hexaJMAPs.min()["joint_prob"]
+            if len(hexaJMAPs[hexa_species].apply(lambda x: ''.join(x),axis=1).unique()) == 1:
+                hexaCorrect="True"
+            else:
+                hexaCorrect="False"
+
+            
+            
 
             # write all to output
-            output_string = "{}\t{}\t{}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{}\t{:0.2f}\t{:0.2f}\n".format(t,n,s,
+            output_string = "{}\t{}\t{}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{}\t{}\n".format(t,n,s,
                 tetra_dist,
                 hexaAB_dist,hexaAC_dist,hexaBC_dist,
                 tetraA_mindip,tetraB_mindip,hexaA_mindip,hexaB_mindip,hexaC_mindip,
                 ess,
-                avgTetraPP,avgHexaPP)
+                avgTetraPP,avgHexaPP,minTetraPP,minHexaPP,
+                tetraCorrect,hexaCorrect)
             sys.stdout.write(output_string)
             os.chdir("..")
         os.chdir("..")
