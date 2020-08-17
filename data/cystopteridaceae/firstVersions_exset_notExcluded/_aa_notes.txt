@@ -1,0 +1,2 @@
+These come from /Users/carlrothfels/Box Sync/Cystopteridaceae_projects/pacbio_lowcopy_cystopteridaceae/_aa_ppp_manuscript/analyses_forPaper/alloPPnet/d_makingReducedDataset/d_alignments_reducedDataset
+(they are the locus alignments ultimately analyzed for the PURC paper, unless I've messed something up.)
