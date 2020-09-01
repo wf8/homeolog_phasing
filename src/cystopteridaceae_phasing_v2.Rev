@@ -217,18 +217,19 @@ for (i in 1:num_loci) {
 
 mymodel = model(Q)
 
-monitors[1] = mnModel(filename=output_file + ".log", printgen=1)
-monitors[2] = mnFile(filename=output_file + ".trees", printgen=1, tree)
+monitors[1] = mnModel(filename=output_file + ".log", printgen=2)
+monitors[2] = mnFile(filename=output_file + ".trees", printgen=4, tree)
 monitors[3] = mnScreen(printgen=1)
-monitors[4] = mnHomeologPhase(filename=output_file + "_phase1.log", printgen=1, ctmc[1])
-monitors[5] = mnHomeologPhase(filename=output_file + "_phase2.log", printgen=1, ctmc[2])
-monitors[6] = mnHomeologPhase(filename=output_file + "_phase3.log", printgen=1, ctmc[3])
-monitors[7] = mnHomeologPhase(filename=output_file + "_phase4.log", printgen=1, ctmc[4])
+monitors[4] = mnHomeologPhase(filename=output_file + "_phase1.log", printgen=2, ctmc[1])
+monitors[5] = mnHomeologPhase(filename=output_file + "_phase2.log", printgen=2, ctmc[2])
+monitors[6] = mnHomeologPhase(filename=output_file + "_phase3.log", printgen=2, ctmc[3])
+monitors[7] = mnHomeologPhase(filename=output_file + "_phase4.log", printgen=2, ctmc[4])
 
 mymcmc = mcmc(mymodel, monitors, moves)
-mymcmc.run(generations=5000)
+# Tried it at first with 5000 generations and .25 burnin, and it was a mess - not converged
+mymcmc.run(generations=25000)
     
-treetrace = readTreeTrace(output_file + ".trees", treetype="clock", burnin=0.25)
+treetrace = readTreeTrace(output_file + ".trees", treetype="clock", burnin=0.6)
 map_tree = mapTree(treetrace, output_file + "_map.tre")
 mcc_tree = mccTree(treetrace, output_file + "_mcc.tre")
 mymcmc.operatorSummary()
