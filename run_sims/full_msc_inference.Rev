@@ -73,7 +73,12 @@ sampling_fraction <- 0.1
 speciation <- 0.2
 extinction <- 0.01
 #pop_size <- 1.0
-pop_size ~ dnExp(1.0)
+pop_size_hp ~ dnExp(2.0)
+pop_size_hp.setValue(1.0)
+moves[++mvi] = mvScale(pop_size_hp, lambda=1.0, weight=20)
+moves[++mvi] = mvScale(pop_size_hp, lambda=0.1, weight=20)
+pop_size ~ dnExp(pop_size_hp)
+pop_size.setValue(1.0)
 moves[++mvi] = mvScale(pop_size, lambda=1.0, weight=20)
 moves[++mvi] = mvScale(pop_size, lambda=0.1, weight=20)
 species_tree ~ dnBDP(lambda=speciation, 
@@ -131,9 +136,9 @@ for (i in 1:num_loci) {
 mymodel = model(Q[1])
 
 monitors[++mni] = mnModel(filename="output" + sim_num + "/phasing.log", printgen=1)
-#monitors[++mni] = mnFile(filename="output" + sim_num + "/phasing.trees", printgen=1, tree)
-monitors[++mni] = mnScreen(printgen=1)
+monitors[++mni] = mnScreen(printgen=1, pop_size)
 for (i in 1:num_loci) {
+    monitors[++mni] = mnFile(filename="output" + sim_num + "/phasing" + i + ".trees", printgen=1, gene_tree[i])
     monitors[++mni] = mnHomeologPhase(filename="output" + sim_num + "/phase" + i + ".log", printgen=1, ctmc[i])
 }
 
