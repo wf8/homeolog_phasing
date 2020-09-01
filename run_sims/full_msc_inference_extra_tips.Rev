@@ -1,0 +1,149 @@
+#
+#
+#
+num_loci = 4
+mvi = 0
+mni = 0
+
+sim_num = 99
+seed = 99
+num_loci = 4
+
+
+
+num_species = 20
+
+for (i in 1:num_loci) {
+    
+    data[i] = readDiscreteCharacterData("data" + sim_num + "/alignment" + i + ".fasta")
+
+    # add missing tips, one per polyploid
+    data[i].addMissingTaxa("tetra_BLANK")
+    data[i].addMissingTaxa("hexa_BLANK")
+    
+    # for each polyploid individual assign an initial phase
+    data[i].setHomeologPhase("tetra_A_1", "tetra_Y_1")
+    data[i].setHomeologPhase("tetra_B_1", "tetra_X_1")
+    data[i].setHomeologPhase("tetra_BLANK", "tetra_Z_1")
+
+    data[i].setHomeologPhase("hexa_A_1", "hexa_Z_1")
+    data[i].setHomeologPhase("hexa_B_1", "hexa_X_1")
+    data[i].setHomeologPhase("hexa_C_1", "hexa_Y_1")
+    data[i].setHomeologPhase("hexa_BLANK", "hexa_V_1")
+
+}
+
+#n_tips = data[1].ntaxa()
+#n_branches = 2 * n_tips - 3
+#for (i in 1:n_branches) {
+#    branch_lengths[i] ~ dnExponential(10)
+#    moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=2)
+#}
+#topology ~ dnUniformTopology(data[1].taxa())
+#moves[++mvi] = mvNNI(topology, weight=20.0)
+#moves[++mvi] = mvSPR(topology, weight=20.0)
+#tree := treeAssembly(topology, branch_lengths)
+
+# set up taxa for species tree
+species[1] = taxon(taxonName="tetra_Y", speciesName="tetra_Y")
+species[2] = taxon(taxonName="tetra_X", speciesName="tetra_X")
+species[2] = taxon(taxonName="tetra_Z", speciesName="tetra_Z")
+species[3] = taxon(taxonName="hexa_Z", speciesName="hexa_Z")
+species[4] = taxon(taxonName="hexa_X", speciesName="hexa_X")
+species[5] = taxon(taxonName="hexa_Y", speciesName="hexa_Y")
+species[5] = taxon(taxonName="hexa_V", speciesName="hexa_V")
+for (i in 6:num_species) {
+    species[i] = taxon(taxonName="dip_" + i, speciesName="dip_" + i)
+}
+# set up taxa for gene trees: one individual from each species tree tip
+individuals[1] = taxon(taxonName="tetra_Y_1", speciesName="tetra_Y")
+individuals[2] = taxon(taxonName="tetra_X_1", speciesName="tetra_X")
+individuals[2] = taxon(taxonName="tetra_Z_1", speciesName="tetra_Z")
+individuals[3] = taxon(taxonName="hexa_Z_1", speciesName="hexa_Z")
+individuals[4] = taxon(taxonName="hexa_X_1", speciesName="hexa_X")
+individuals[5] = taxon(taxonName="hexa_Y_1", speciesName="hexa_Y")
+individuals[5] = taxon(taxonName="hexa_V_1", speciesName="hexa_V")
+for (i in 6:num_species) {
+        ind_index = i
+        j=1
+        individuals[ind_index] = taxon(taxonName="dip_" + i + "_" + j, speciesName="dip_" + i)
+}
+root_age <- 50
+sampling_fraction <- 0.1
+speciation <- 0.2
+extinction <- 0.01
+#pop_size <- 1.0
+pop_size ~ dnExp(1.0)
+moves[++mvi] = mvScale(pop_size, lambda=1.0, weight=20)
+moves[++mvi] = mvScale(pop_size, lambda=0.1, weight=20)
+species_tree ~ dnBDP(lambda=speciation, 
+                     mu=extinction, 
+                     rootAge=root_age, 
+                     rho=sampling_fraction, 
+                     taxa=species)
+moves[++mvi] = mvNNI(species_tree, weight=20.0)
+moves[++mvi] = mvFNPR(species_tree, weight=20.0)
+moves[++mvi] = mvGPR(species_tree, weight=20.0)
+moves[++mvi] = mvNodeTimeScale(species_tree, weight=20.0)
+moves[++mvi] = mvTreeScale(species_tree, weight=20.0)
+moves[++mvi] = mvSubtreeScale(species_tree, weight=20.0)
+
+for (i in 1:num_loci) {
+
+    gene_tree[i] ~ dnMultiSpeciesCoalescent(speciesTree=species_tree, 
+                                            Ne=pop_size, 
+                                            taxa=individuals)
+    moves[++mvi] = mvNNI(gene_tree[i], weight=20.0)
+    moves[++mvi] = mvFNPR(gene_tree[i], weight=20.0)
+    moves[++mvi] = mvGPR(gene_tree[i], weight=20.0)
+    moves[++mvi] = mvNodeTimeScale(gene_tree[i], weight=20.0)
+    moves[++mvi] = mvTreeScale(gene_tree[i], weight=20.0)
+    moves[++mvi] = mvSubtreeScale(gene_tree[i], weight=20.0)
+
+    # model of molecular evolution
+    er_prior[i] <- v(1,1,1,1,1,1)
+    er[i] ~ dnDirichlet(er_prior[i])
+    pi_prior[i] <- v(1,1,1,1)
+    pi[i] ~ dnDirichlet(pi_prior[i])
+    Q[i] := fnGTR(er[i], pi[i])
+
+    ctmc[i] ~ dnPhyloCTMC(tree=gene_tree[i], 
+                          Q=Q[i], 
+                          type="DNA") 
+
+    ctmc[i].clamp(data[i])
+     
+    # moves for each polyploid individual
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "tetra_X_1", "tetra_Y_1", weight=5)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "tetra_X_1", "tetra_Z_1", weight=5)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "tetra_Y_1", "tetra_Z_1", weight=5)
+
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_X_1", "hexa_Y_1", weight=5)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_X_1", "hexa_Z_1", weight=5)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_X_1", "hexa_V_1", weight=5)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_Y_1", "hexa_Z_1", weight=5)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_Y_1", "hexa_V_1", weight=5)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "hexa_Z_1", "hexa_V_1", weight=5)
+
+
+}
+
+mymodel = model(Q[1])
+
+monitors[++mni] = mnModel(filename="output" + sim_num + "/phasing_extra_tips.log", printgen=1)
+#monitors[++mni] = mnFile(filename="output" + sim_num + "/phasing_extra_tips.trees", printgen=1, tree)
+monitors[++mni] = mnScreen(printgen=1)
+for (i in 1:num_loci) {
+    monitors[++mni] = mnHomeologPhase(filename="output" + sim_num + "/phase" + i + "_extra_tips.log", printgen=1, ctmc[i])
+}
+
+mymcmc = mcmc(mymodel, monitors, moves)
+mymcmc.run(generations=2000)
+#    
+#treetrace = readTreeTrace("output" + sim_num + "/phasing_extra_tips.trees", treetype="clock", burnin=0.25)
+#map_tree = mapTree(treetrace,"output" + sim_num + "/phasing_extra_tips.tree")
+#
+#mymcmc.operatorSummary()
+
+
+quit()
