@@ -1,0 +1,39 @@
+#
+#
+#
+
+num_loci = 4
+num_species = 20
+num_reps = 100
+pop_sizes = [0.1, 1.0, 10, 100, 1000]
+
+# set up taxa for trees
+for (i in 1:num_species) {
+    species[i] = taxon(taxonName=i, speciesName=i)
+    individuals[i] = taxon(taxonName=i, speciesName=i)
+}
+
+root_age <- 50
+sampling_fraction <- 0.1
+speciation <- 0.2
+extinction <- 0.01
+
+for (sim_num in 1:num_reps) {
+    for (pop_size in pop_sizes) {
+        # simulate species tree
+        species_tree ~ dnBDP(lambda=speciation, 
+                             mu=extinction, 
+                             rootAge=root_age, 
+                             rho=sampling_fraction, 
+                             taxa=species)
+        write(species_tree, filename=pop_size+ "/" + sim_num + "/species_tree.tree")
+        for (i in 1:num_loci) {
+            # simulate gene tree
+            gene_tree[i] ~ dnMultiSpeciesCoalescent(speciesTree=species_tree, 
+                                                    Ne=pop_size, 
+                                                    taxa=individuals)
+            write(gene_tree[i], filename=pop_size+ "/" + sim_num +"/gene_tree" + i + ".tree")
+        }
+    }
+}
+quit()
