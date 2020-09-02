@@ -5,7 +5,7 @@
 num_loci = 4
 num_species = 20
 num_reps = 100
-pop_sizes = [0.1, 1.0, 10, 100, 1000]
+pop_sizes = [0.1, 0.5, 1.0, 5.0, 10, 100, 1000]
 
 # set up taxa for trees
 for (i in 1:num_species) {

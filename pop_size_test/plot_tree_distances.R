@@ -11,6 +11,7 @@ num_loci = 4
 num_species = 20
 num_reps = 100
 pop_sizes = c(0.1, 1.0, 10, 100, 1000)
+pop_sizes = c(0.1, 0.5, 1.0, 5.0)
 
 plot_data = data.frame()
 for (sim_num in 1:num_reps) {
@@ -48,4 +49,4 @@ plot_data$pop_size = as.factor(plot_data$pop_size)
 p = ggplot(plot_data) + 
     geom_point(aes(x=d_RF, y=log(d_KF), color=pop_size), alpha=0.5) + 
     theme_classic()
-ggsave('pop_size_and_tree_discordance.pdf', p, width=5, height=4) 
+ggsave('pop_size_and_tree_discordance2.pdf', p, width=5, height=4) 
