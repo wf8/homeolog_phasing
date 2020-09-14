@@ -12,7 +12,6 @@
 
 #sim_num=99
 #seed = 99
-shared_gene_tree = TRUE
 seq_length = 800
 branch_rate = 0.01
 num_loci = 4
@@ -58,19 +57,9 @@ write(species_tree, filename="nindv_"+pop_size+ "/data" + sim_num + "/species_tr
 for (i in 1:num_loci) {
 
     # simulate gene tree
-    if (shared_gene_tree == FALSE) {
-        gene_tree[i] ~ dnMultiSpeciesCoalescent(speciesTree=species_tree, 
-                                                Ne=pop_size, 
-                                                taxa=individuals)
-    } else {
-        if (i == 1) {
-            gene_tree[i] ~ dnMultiSpeciesCoalescent(speciesTree=species_tree, 
-                                                    Ne=pop_size, 
-                                                    taxa=individuals)
-        } else {
-            gene_tree[i] := gene_tree[1]
-        }
-    }
+    gene_tree[i] ~ dnMultiSpeciesCoalescent(speciesTree=species_tree, 
+                                            Ne=pop_size, 
+                                            taxa=individuals)
     write(gene_tree[i], filename="nindv_"+pop_size+ "/data" + sim_num +"/gene_tree" + i + ".tree")
 
     # model of molecular evolution
