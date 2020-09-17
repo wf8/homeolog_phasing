@@ -1,0 +1,82 @@
+#
+# Simulate species tree under birth-death process and gene trees under
+# the multi-species coalescent. Then simulate gene sequences over the 
+# gene trees.
+#
+
+# Set the sim_num and pop_size via the command line, like this:
+# echo "'sim_num={}; pop_size=100; seed({}); source(\"msc_sims.Rev\");' | rb"
+
+#For a parallel run:
+# parallel -j 12 echo "'sim_num={1}; pop_size={2}; seed({1}); source(\"../msc_sims.Rev\");' | rb" ::: {1..100} ::: 100 1000 10000
+
+#sim_num=99
+#seed = 99
+#seq_length = 800
+seq_length ~ dnUniformInteger(1, 1000)
+branch_rate = 0.01
+num_loci = 4
+num_species = 20
+#pop_size = 100
+
+# set up taxa for species tree
+# genomes A and B for a tetraploid
+species[1] = taxon(taxonName="tetra_A", speciesName="tetra_A")
+species[2] = taxon(taxonName="tetra_B", speciesName="tetra_B")
+# genomes A, B, and C for a hexaploid
+species[3] = taxon(taxonName="hexa_A", speciesName="hexa_A")
+species[4] = taxon(taxonName="hexa_B", speciesName="hexa_B")
+species[5] = taxon(taxonName="hexa_C", speciesName="hexa_C")
+# the rest are diploid lineages
+for (i in 6:num_species) {
+    species[i] = taxon(taxonName="dip_" + i, speciesName="dip_" + i)
+}
+# set up taxa for gene trees: one individual from each species tree tip
+individuals[1] = taxon(taxonName="tetra_A_1", speciesName="tetra_A")
+individuals[2] = taxon(taxonName="tetra_B_1", speciesName="tetra_B")
+individuals[3] = taxon(taxonName="hexa_A_1", speciesName="hexa_A")
+individuals[4] = taxon(taxonName="hexa_B_1", speciesName="hexa_B")
+individuals[5] = taxon(taxonName="hexa_C_1", speciesName="hexa_C")
+for (i in 6:num_species) {
+        ind_index = i
+        j=1
+        individuals[ind_index] = taxon(taxonName="dip_" + i + "_" + j, speciesName="dip_" + i)
+}
+
+root_age <- 50
+sampling_fraction <- 0.1
+speciation <- 0.2
+extinction <- 0.01
+
+species_tree ~ dnBDP(lambda=speciation, 
+                     mu=extinction, 
+                     rootAge=root_age, 
+                     rho=sampling_fraction, 
+                     taxa=species)
+write(species_tree, filename="nindv_"+pop_size+ "/data" + sim_num + "/species_tree.tree")
+
+for (i in 1:num_loci) {
+
+    # simulate gene tree
+    gene_tree[i] ~ dnMultiSpeciesCoalescent(speciesTree=species_tree, 
+                                            Ne=pop_size, 
+                                            taxa=individuals)
+    write(gene_tree[i], filename="nindv_"+pop_size+ "/data" + sim_num +"/gene_tree" + i + ".tree")
+
+    # model of molecular evolution
+    er_prior <- v(1,1,1,1,1,1)
+    er ~ dnDirichlet(er_prior)
+    pi_prior <- v(1,1,1,1)
+    pi ~ dnDirichlet(pi_prior)
+    Q := fnGTR(er, pi)
+
+    ctmc ~ dnPhyloCTMC(tree=gene_tree[i], 
+                       Q=Q, 
+                       type="DNA", 
+                       nSites=seq_length, 
+                       branchRates=branch_rate)
+
+    writeFasta("nindv_"+pop_size+ "/data" + sim_num + "/alignment" + i + ".fasta", ctmc)
+
+}
+quit()
