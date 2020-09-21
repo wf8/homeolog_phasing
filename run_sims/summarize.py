@@ -13,7 +13,7 @@ tetra_species = ["tetra_X_1","tetra_Y_1"]
 hexa_labels = ["hexa_A","hexa_B","hexa_C"]
 hexa_species = ["hexa_X_1","hexa_Y_1","hexa_Z_1"]
 
-sys.stdout.write("Type\tnIndiv\tSimNum\tTetraDist\tHexaABDist\tHexaACDist\tHexaBCDist\tTetraAMinDip\tTetraBMinDip\tHexaAMinDip\tHexaBMinDip\tHexaCMinDip\tESS\tAvgTetraPP\tAvgHexaPP\tMinTetraPP\tMinHexaPP\tTetraCorrect\tHexaCorrect\tKF\tRF\n")
+sys.stdout.write("Type\tnIndiv\tSimNum\tTetraDist\tHexaABDist\tHexaACDist\tHexaBCDist\tTetraAMinDip\tTetraBMinDip\tHexaAMinDip\tHexaBMinDip\tHexaCMinDip\tESS\tAvgTetraPP\tAvgHexaPP\tMinTetraPP\tMinHexaPP\tTetraCorrect\tHexaCorrect\tKF\tRF\tseq_length\n")
 for n in nindv:
     os.chdir("nindv_{}".format(n))
     if n == 0.0001:
@@ -59,6 +59,9 @@ for n in nindv:
         KF = out[0]
         RF = out[1]
 
+        # get sequence length
+        stream = os.popen('sed -n 2p alignment1.fasta | wc -c')
+        seq_length = stream.read().strip()
         
         # summarize posteriors 
         os.chdir("../output{}".format(s))
@@ -96,14 +99,14 @@ for n in nindv:
         
         t = 'unlinked'
         # write all to output
-        output_string = "{}\t{}\t{}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{}\t{}\t{}\t{}\n".format(t,n,s,
+        output_string = "{}\t{}\t{}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{}\t{}\t{}\t{}\t{}\n".format(t,n,s,
             tetra_dist,
             hexaAB_dist,hexaAC_dist,hexaBC_dist,
             tetraA_mindip,tetraB_mindip,hexaA_mindip,hexaB_mindip,hexaC_mindip,
             ess,
             avgTetraPP,avgHexaPP,minTetraPP,minHexaPP,
             tetraCorrect,hexaCorrect,
-            KF, RF)
+            KF, RF, seq_length)
         sys.stdout.write(output_string)
         os.chdir("..")
     os.chdir("..")
