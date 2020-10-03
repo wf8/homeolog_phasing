@@ -10,7 +10,9 @@ library(ggplot2)
 library(plyr)
 library(magrittr)
 library(tidyr)
+library(dplyr)
 library(ggtree)
+
 
 tree_file = 'output_good/cystopteridaceae_rooted.tree'
 genes = c('APP', 'GAP', 'IBR', 'PGI')
@@ -116,7 +118,7 @@ prob_results = data.frame()
 seq_results = data.frame()
 for (i in 1:length(genes)) {
 
-    f_in = paste0('output_good/cystopteridaceae_phase', i, '.log')
+    f_in = paste0('output/cystopteridaceae_phase', i, '.log')
     
     # read in file and exclude burnin
     d = read.csv(f_in, sep='\t')
@@ -157,5 +159,5 @@ p = homologized(p, prob_results, seq_results, offset=0.009, low="#EE0000", mid="
 p = p + theme(legend.text=element_text(size=6),
               legend.title=element_text(size=8))
 #+ scale_fill_viridis_c(option="D", name="Posterior\nProbability", na.value="white")
-ggsave('homologized.pdf')
+ggsave('homologized_v1.pdf')
 
