@@ -241,7 +241,8 @@ plot_data$correct = plot_data$HexaCorrect
 plot_data = rbind(plot_data, plot_data1)
 plot_data$correct = as.logical(plot_data$correct)
 
-plot_data$distance_bin = cut(plot_data$distance, breaks=c(0, 5, 25, 50, 100), include.lowest=TRUE, ordered_result=TRUE)
+#plot_data$distance_bin = cut(plot_data$distance, breaks=c(0, 5, 10, 25, 50, 100), include.lowest=TRUE, ordered_result=TRUE)
+plot_data$distance_bin = cut(plot_data$distance, breaks=c(0, 5, 15, 30, 50, 100), include.lowest=TRUE, ordered_result=TRUE)
 
 plot_data$bin = ''
 plot_data$h = 0
@@ -279,10 +280,10 @@ p5 = ggplot(plot_data) +
     ylab('Distance between\nsubgenomes') +
     xlab('Posterior probability\n  ') +
     xlim(c(0.0,1.0)) +
-    geom_segment(data=data.frame(y=c(0.25,2.25,4.25,6.25)),
+    geom_segment(data=data.frame(y=c(0.25,2.25,4.25,6.25, 8.25)),
                  aes(x=0.0, xend=1.0, y=y, yend=y), orientation='y', 
                  linetype='dotted', alpha=0.5, color='grey80') +
-    scale_y_continuous(breaks=c(0.25,2.25,4.25,6.25), labels=c('0.0-0.05', '0.05-0.25', '0.25-0.50', '0.5-1.0'), limits=c(0,7.5)) +
+    scale_y_continuous(breaks=c(0.25,2.25,4.25,6.25,8.25), labels=c('0.0-0.05', '0.05-0.15', '0.15-0.3', '0.3-0.50', '0.5-1.0'), limits=c(0,9.5)) +
     scale_fill_manual(values=c('firebrick','grey34')) +
     scale_color_manual(values=c('firebrick','grey34')) +
     theme_classic() +
@@ -302,9 +303,9 @@ if (nrow(pd[pd$zend > 1,]) > 0)
 p6 = ggplot(pd) + 
     geom_segment(aes(x=0.0, xend=1.0, y=y, yend=y), orientation='y', 
                  linetype='dotted', alpha=0.5, color='grey80') +
-    geom_segment(aes(x=1.0, xend=1.0, y=0, yend=7.5), orientation='y', 
+    geom_segment(aes(x=1.0, xend=1.0, y=0, yend=9), orientation='y', 
                  linetype='dotted', alpha=0.4, color='grey80') +
-    geom_segment(aes(x=0.0, xend=0.0, y=0, yend=7.5), orientation='y', 
+    geom_segment(aes(x=0.0, xend=0.0, y=0, yend=9), orientation='y', 
                  linetype='dotted', alpha=0.4, color='grey80') +
     geom_segment(aes(x=zstart, xend=zend, y=y, yend=y), 
                  orientation='y', alpha=0.5, size=1, color='darkorange2') +
@@ -312,7 +313,7 @@ p6 = ggplot(pd) +
     geom_line(aes(y=y, x=x), orientation='y', color='grey44') + 
     #geom_smooth(aes(y=y, x=x), method='loess',se=FALSE) + 
     xlab('Proportion\ncorrect') +
-    ylim(c(0.0,7.5)) +
+    ylim(c(0.0,9.5)) +
     scale_x_continuous(breaks=c(0.0,1.0), limits=c(-0.01,1.01), labels=c('0.0','1.0')) +
     theme_classic() +
     theme(legend.position = "none",
@@ -345,7 +346,7 @@ plot_data = rbind(plot_data, plot_data1)
 plot_data$correct = as.logical(plot_data$correct)
 
 #plot_data$distance_bin = cut(plot_data$distance, breaks=c(0, 10, 25, 50, 75, 100), include.lowest=TRUE, ordered_result=TRUE)
-plot_data$distance_bin = cut(plot_data$distance, breaks=c(0, 5, 25, 50, 100), include.lowest=TRUE, ordered_result=TRUE)
+plot_data$distance_bin = cut(plot_data$distance, breaks=c(0, 5, 15, 30, 50, 100), include.lowest=TRUE, ordered_result=TRUE)
 
 plot_data$bin = ''
 plot_data$h = 0
@@ -383,10 +384,10 @@ p7 = ggplot(plot_data) +
     ylab('Distance to\nnearest diploid') +
     xlab('Posterior probability\n  ') +
     xlim(c(0.0,1.0)) +
-    geom_segment(data=data.frame(y=c(0.25,2.25,4.25,6.25)),
+    geom_segment(data=data.frame(y=c(0.25,2.25,4.25,8.25)),
                  aes(x=0.0, xend=1.0, y=y, yend=y), orientation='y', 
                  linetype='dotted', alpha=0.5, color='grey80') +
-    scale_y_continuous(breaks=c(0.25,2.25,4.25,6.25), labels=c('0.0-0.05', '0.05-0.25', '0.25-0.5', '0.5-1.0'), limits=c(0,7.5)) +
+    scale_y_continuous(breaks=c(0.25,2.25,4.25,6.25,8.25), labels=c('0.0-0.05', '0.05-0.15', '0.15-0.3', '0.3-0.50', '0.5-1.0'), limits=c(0,9.5)) +
     scale_fill_manual(values=c('firebrick','grey34')) +
     scale_color_manual(values=c('firebrick','grey34')) +
     theme_classic() +
@@ -406,9 +407,9 @@ if (nrow(pd[pd$zend > 1,]) > 0)
 p8 = ggplot(pd) + 
     geom_segment(aes(x=0.0, xend=1.0, y=y, yend=y), orientation='y', 
                  linetype='dotted', alpha=0.5, color='grey80') +
-    geom_segment(aes(x=1.0, xend=1.0, y=0, yend=7.5), orientation='y', 
+    geom_segment(aes(x=1.0, xend=1.0, y=0, yend=9), orientation='y', 
                  linetype='dotted', alpha=0.4, color='grey80') +
-    geom_segment(aes(x=0.0, xend=0.0, y=0, yend=7.5), orientation='y', 
+    geom_segment(aes(x=0.0, xend=0.0, y=0, yend=9), orientation='y', 
                  linetype='dotted', alpha=0.4, color='grey80') +
     geom_segment(aes(x=zstart, xend=zend, y=y, yend=y), 
                  orientation='y', alpha=0.5, size=1, color='darkorange2') +
@@ -416,7 +417,7 @@ p8 = ggplot(pd) +
     geom_line(aes(y=y, x=x), orientation='y', color='grey44') + 
     #geom_smooth(aes(y=y, x=x), method='loess',se=FALSE) + 
     xlab('Proportion\ncorrect') +
-    ylim(c(0.0,7.5)) +
+    ylim(c(0.0,9)) +
     scale_x_continuous(breaks=c(0.0,1.0), limits=c(-0.01,1.01), labels=c('0.0','1.0')) +
     theme_classic() +
     theme(legend.position = "none",
