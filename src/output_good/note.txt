@@ -1,4 +1,0 @@
-I created this directory just to match the paths in Will's plot_cystopteridaceae_phase.R
-script. So that I could see if I could get that script to run.
-
-It can be erased.

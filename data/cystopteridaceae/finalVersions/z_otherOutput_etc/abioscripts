@@ -1,4 +1,0 @@
-#!/bin/bash
-DIRECTORY_OF_THIS_SCRIPT=$(dirname $0)
-java -Xmx1024M -Xms1024M -jar $DIRECTORY_OF_THIS_SCRIPT/abioscripts.jar $@
-#java -jar /home/anders/projekt/maven/scripts/target/abioscripts.jar param1 $@

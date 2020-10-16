@@ -5,3 +5,14 @@ CJR realized this on Aug9, and made the new set of alignments that have those re
 excluded (otherwise the two sets of alignments are the same)
 
 ./abioscripts --seqconcat --applyexcludes --outputsingles --filenames *.nex --outputfile abio_outputfiles
+
+
+The "finalVersions_sequencesRenamed" versions have the sequence names (the ones that are 
+subject to swapping) changed to be more interpretable. E.g.,
+	A_tai_6137_A  	renamed to	6137_copy1
+
+The tree-tip names will then be changed to, e.g., A_taiwaniana_6137_A
+
+The notation for the new names:
+	Multiple "species" with the same name (ie undescribed cryptic species) are indicated with "sp1", "sp2" etc suffixes
+	Multiple "allele individuals" from the same diploid accesions are indicated with "a", "b", etc, after the db#

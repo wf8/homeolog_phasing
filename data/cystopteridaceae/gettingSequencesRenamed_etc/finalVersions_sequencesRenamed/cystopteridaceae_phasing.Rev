@@ -1,0 +1,170 @@
+#
+# Performs homeolog phasing on the Cystopteridaceae Rothfels et al. 2017 dataset.
+# Will Freyman
+#
+# Updated 20200810, CJR
+
+output_file = "output/cystopteridaceae"
+
+# read in data
+alignments = [ "./APP_alloPPnet_version_reduced.nex",
+               "./GAP_alloPPnet_version_reduced.nex",
+               "./IBR_alloPPnet_version_reduced.nex",
+               "./PGI_alloPPnet_version_reduced.nex"]
+# alignments = [ "../data/cystopteridaceae/finalVersions/APP_alloPPnet_version_reduced.nex",
+#                "../data/cystopteridaceae/finalVersions/GAP_alloPPnet_version_reduced.nex",
+#                "../data/cystopteridaceae/finalVersions/IBR_alloPPnet_version_reduced.nex",
+#                "../data/cystopteridaceae/finalVersions/PGI_alloPPnet_version_reduced.nex"]
+
+num_loci = alignments.size()
+
+for (i in 1:num_loci) {
+    data[i] = readDiscreteCharacterData(alignments[i])
+}
+
+# add missing taxa
+for (i in 1:num_loci) {
+    for (j in 1:num_loci) {
+        data[i].addMissingTaxa(data[j].taxa())
+    }
+    # add missing allele
+    data[i].addMissingTaxa("7981_copy4")
+    
+    if (i == 4) {
+        data[i].taxa()
+    }
+
+}
+num_tips = data[1].ntaxa()
+
+# set initial phase
+for (i in 1:num_loci) {
+    data[i].setHomeologPhase("6137_copy1", "A_taiwaniana_6137_A")
+    data[i].setHomeologPhase("6137_copy2", "A_taiwaniana_6137_B")
+    data[i].setHomeologPhase("8704_copy1", "A_tenuisecta_sp2_8704_A")
+    data[i].setHomeologPhase("8704_copy2", "A_tenuisecta_sp2_8704_B")
+    data[i].setHomeologPhase("8745_copy1", "A_tenuisecta_sp3_8745_A")
+    data[i].setHomeologPhase("8745_copy2", "A_tenuisecta_sp3_8745_B")
+    data[i].setHomeologPhase("6380_copy1", "C_diaphana_6380_A")
+    data[i].setHomeologPhase("6380_copy2", "C_diaphana_6380_B")
+    data[i].setHomeologPhase("7009_copy1", "C_fragilis_sp1_7009_A")
+    data[i].setHomeologPhase("7009_copy2", "C_fragilis_sp1_7009_B")
+    data[i].setHomeologPhase("7248_copy1", "C_fragilis_sp2_7248_A")
+    data[i].setHomeologPhase("7248_copy2", "C_fragilis_sp2_7248_B")
+    data[i].setHomeologPhase("7943_copy1", "C_montana_7943_A")
+    data[i].setHomeologPhase("7943_copy2", "C_montana_7943_B")
+    data[i].setHomeologPhase("6055_copy1", "C_pellucida_6055_A")
+    data[i].setHomeologPhase("6055_copy2", "C_pellucida_6055_B")
+    data[i].setHomeologPhase("8674_copy1", "C_sudetica_8674_A")
+    data[i].setHomeologPhase("8674_copy2", "C_sudetica_8674_B")
+    data[i].setHomeologPhase("6379_copy1", "C_tasmanica_6379_A")
+    data[i].setHomeologPhase("6379_copy2", "C_tasmanica_6379_B")
+    data[i].setHomeologPhase("6387_copy1", "C_tenuis_6387_A")
+    data[i].setHomeologPhase("6387_copy2", "C_tenuis_6387_B")
+    data[i].setHomeologPhase("6848_copy1", "C_utahensis_6848_A")
+    data[i].setHomeologPhase("6848_copy2", "C_utahensis_6848_B")
+    data[i].setHomeologPhase("6979_copy1", "G_continentale_6979_A")
+    data[i].setHomeologPhase("6979_copy2", "G_continentale_6979_B")
+    data[i].setHomeologPhase("7751_copy1", "G_disjunctum_7751_A")
+    data[i].setHomeologPhase("7751_copy2", "G_disjunctum_7751_B")
+    data[i].setHomeologPhase("7981_copy1", "G_dryopteris_7981_A")
+    data[i].setHomeologPhase("7981_copy2", "G_dryopteris_7981_B")
+    data[i].setHomeologPhase("7981_copy3", "G_dryopteris_7981_C")
+    data[i].setHomeologPhase("7981_copy4", "G_dryopteris_7981_D")
+    data[i].setHomeologPhase("8739_copy1", "G_oyamense_sp2_8739_A")
+    data[i].setHomeologPhase("8739_copy2", "G_oyamense_sp2_8739_B")
+    data[i].setHomeologPhase("4862_copy1", "G_remotepinnatum_4862_A")
+    data[i].setHomeologPhase("4862_copy2", "G_remotepinnatum_4862_B")
+    data[i].setHomeologPhase("7945_copy1", "G_robertianum_7945_A")
+    data[i].setHomeologPhase("7945_copy2", "G_robertianum_7945_B")
+    data[i].setHomeologPhase("7974_copy1", "xCystocarpium_7974_A")
+    data[i].setHomeologPhase("7974_copy2", "xCystocarpium_7974_B")
+    data[i].setHomeologPhase("7974_copy3", "xCystocarpium_7974_C")
+    data[i].setHomeologPhase("7974_copy4", "xCystocarpium_7974_D")
+}
+
+
+
+mvi = 0
+
+n_branches = 2 * num_tips - 3
+for (i in 1:n_branches) {
+    branch_lengths[i] ~ dnExponential(10)
+    moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=2)
+}
+topology ~ dnUniformTopology(data[1].taxa())
+moves[++mvi] = mvNNI(topology, weight=20.0)
+moves[++mvi] = mvSPR(topology, weight=20.0)
+tree := treeAssembly(topology, branch_lengths)
+
+for (i in 1:num_loci) {
+    
+    # gtr for each locus
+    er_prior <- v(1,1,1,1,1,1)
+    er[i] ~ dnDirichlet(er_prior)
+    moves[++mvi] = mvSimplexElementScale(er[i], weight=3)
+
+    pi_prior <- v(1,1,1,1)
+    pi[i] ~ dnDirichlet(pi_prior)
+    moves[++mvi] = mvSimplexElementScale(pi[i], weight=3)
+
+    Q[i] := fnGTR(er[i], pi[i])
+
+    ctmc[i] ~ dnPhyloCTMC(tree=tree, Q=Q[i], type="DNA")
+    ctmc[i].clamp(data[i])
+}
+
+w = 10/29
+for (i in 1:num_loci) {
+
+    # switch phasing proposals
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "A_taiwaniana_6137_A", "A_taiwaniana_6137_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "A_tenuisecta_sp2_8704_A", "A_tenuisecta_sp2_8704_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "A_tenuisecta_sp3_8745_A", "A_tenuisecta_sp3_8745_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_diaphana_6380_A", "C_diaphana_6380_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_fragilis_sp1_7009_A", "C_fragilis_sp1_7009_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_fragilis_sp2_7248_A", "C_fragilis_sp2_7248_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_montana_7943_A", "C_montana_7943_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_pellucida_6055_A", "C_pellucida_6055_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_sudetica_8674_A", "C_sudetica_8674_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_tasmanica_6379_A", "C_tasmanica_6379_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_tenuis_6387_A", "C_tenuis_6387_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_utahensis_6848_A", "C_utahensis_6848_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_continentale_6979_A", "G_continentale_6979_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_disjunctum_7751_A", "G_disjunctum_7751_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_oyamense_sp2_8739_A", "G_oyamense_sp2_8739_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_remotepinnatum_4862_A", "G_remotepinnatum_4862_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_robertianum_7945_A", "G_robertianum_7945_B", weight=w)
+
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_C", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_B", "G_dryopteris_7981_C", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystocarpium_7974_A", "xCystocarpium_7974_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystocarpium_7974_A", "xCystocarpium_7974_C", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystocarpium_7974_B", "xCystocarpium_7974_C", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystocarpium_7974_A", "xCystocarpium_7974_D", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystocarpium_7974_B", "xCystocarpium_7974_D", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystocarpium_7974_C", "xCystocarpium_7974_D", weight=w)
+}
+
+mymodel = model(Q)
+
+monitors[1] = mnModel(filename=output_file + ".log", printgen=1)
+monitors[2] = mnFile(filename=output_file + ".trees", printgen=1, tree)
+monitors[3] = mnScreen(printgen=1)
+monitors[4] = mnHomeologPhase(filename=output_file + "_phase1.log", printgen=1, ctmc[1])
+monitors[5] = mnHomeologPhase(filename=output_file + "_phase2.log", printgen=1, ctmc[2])
+monitors[6] = mnHomeologPhase(filename=output_file + "_phase3.log", printgen=1, ctmc[3])
+monitors[7] = mnHomeologPhase(filename=output_file + "_phase4.log", printgen=1, ctmc[4])
+
+mymcmc = mcmc(mymodel, monitors, moves)
+mymcmc.run(generations=5000)
+    
+treetrace = readTreeTrace(output_file + ".trees", treetype="clock", burnin=0.25)
+map_tree = mapTree(treetrace, output_file + "_map.tree")
+mcc_tree = mccTree(treetrace, output_file + "_mcc.tree")
+mymcmc.operatorSummary()
