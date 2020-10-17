@@ -7,20 +7,18 @@
 output_file = "output/cystopteridaceae"
 
 # read in data
-alignments = [ "./APP_alloPPnet_version_reduced.nex",
-               "./GAP_alloPPnet_version_reduced.nex",
-               "./IBR_alloPPnet_version_reduced.nex",
-               "./PGI_alloPPnet_version_reduced.nex"]
-# alignments = [ "../data/cystopteridaceae/finalVersions/APP_alloPPnet_version_reduced.nex",
-#                "../data/cystopteridaceae/finalVersions/GAP_alloPPnet_version_reduced.nex",
-#                "../data/cystopteridaceae/finalVersions/IBR_alloPPnet_version_reduced.nex",
-#                "../data/cystopteridaceae/finalVersions/PGI_alloPPnet_version_reduced.nex"]
+alignments = [ "../data/cystopteridaceae/finalVersions/APP_toHomologizer.nex",
+               "../data/cystopteridaceae/finalVersions/GAP_toHomologizer.nex",
+               "../data/cystopteridaceae/finalVersions/IBR_toHomologizer.nex",
+               "../data/cystopteridaceae/finalVersions/PGI_toHomologizer.nex"]
 
 num_loci = alignments.size()
 
 for (i in 1:num_loci) {
     data[i] = readDiscreteCharacterData(alignments[i])
 }
+
+
 
 ## add missing taxa
 
@@ -45,53 +43,27 @@ for (i in 1:num_loci) {
 missingTax <- v("8704_BLANK", "8704_BLANK2", "C_bulbifera_7650b", "6380_BLANK", "6380_BLANK2", "7751_BLANK", "7981_BLANK2", "G_oyamense_sp1_6399b")
 data[1].addMissingTaxa( missingTax )
 
-# data[1].addMissingTaxa("8704_BLANK")
-# data[1].addMissingTaxa("8704_BLANK2")
-# data[1].addMissingTaxa("C_bulbifera_7650b")
-# data[1].addMissingTaxa("6380_BLANK")
-# data[1].addMissingTaxa("6380_BLANK2")
-# data[1].addMissingTaxa("7751_BLANK")
-# data[1].addMissingTaxa("7981_BLANK2")
-# data[1].addMissingTaxa("G_oyamense_sp1_6399b")
-
 # # Adding missing taxa to GAP
 missingTax <- v("C_bulbifera_7650a", "7009_BLANK", "C_bulbifera_7650b", "G_oyamense_sp1_6399b")
 data[2].addMissingTaxa( missingTax )
 
-# data[2].addMissingTaxa("C_bulbifera_7650a")
-# data[2].addMissingTaxa("7009_BLANK")
-# data[2].addMissingTaxa("C_bulbifera_7650b")
-# data[2].addMissingTaxa("G_oyamense_sp1_6399b")
-
 # # Adding missing taxa to IBR
-missingTax <- ("C_protrusa_6359b", "6379_BLANK", "6848_BLANK", "6848_BLANK2", "6380_BLANK", "6380_BLANK2", "7981_BLANK2")
+missingTax <- v("C_protrusa_6359b", "6379_BLANK", "6848_BLANK", "6848_BLANK2", "6380_BLANK", "6380_BLANK2", "7981_BLANK2")
 data[3].addMissingTaxa( missingTax )
 
-
-# data[3].addMissingTaxa("C_protrusa_6359b")
-# data[3].addMissingTaxa("6379_BLANK")
-# data[3].addMissingTaxa("6848_BLANK")
-# data[3].addMissingTaxa("6848_BLANK2")
-# data[3].addMissingTaxa("6380_BLANK")
-# data[3].addMissingTaxa("6380_BLANK2")
-# data[3].addMissingTaxa("7981_BLANK2")
-
 # # Adding missing taxa to PGI
-missingTax <- ("8704_BLANK", "7751_BLANK", "C_protrusa_6359b", "6848_BLANK")
+missingTax <- v("8704_BLANK", "7751_BLANK", "C_protrusa_6359b", "6848_BLANK")
 data[4].addMissingTaxa( missingTax )
 
-# data[4].addMissingTaxa("8704_BLANK")
-# data[4].addMissingTaxa("7751_BLANK")
-# data[4].addMissingTaxa("C_protrusa_6359b")
-# data[4].addMissingTaxa("6848_BLANK")
 
 num_tips = data[1].ntaxa()
 
-# Printing the taxon list for each locus, as a check
-for (i in 1:num_loci) {
-   # add missing allele
-    data[i].taxa()
-}
+
+# # Printing the taxon list for each locus, as a check
+# for (i in 1:num_loci) {
+#    # add missing allele
+#     data[i].taxa()
+# }
 
 
 
@@ -100,7 +72,7 @@ for (i in 1:num_loci) {
 for (i in 1:num_loci) {
     data[i].setHomeologPhase("6137_copy1", "A_taiwaniana_6137_A")
     data[i].setHomeologPhase("6137_copy2", "A_taiwaniana_6137_B")
-    # data[i].setHomeologPhase("8704_copy1", "A_tenuisecta_sp2_8704_A")
+    # data[i].setHomeologPhase("8704_copy1", "A_tenuisecta_sp2_8704_A") # Some loci are missing this copy (so it's called "BLANK" and need to map it locus-by-locus) 
     # data[i].setHomeologPhase("8704_copy2", "A_tenuisecta_sp2_8704_B")
     data[i].setHomeologPhase("8745_copy1", "A_tenuisecta_sp3_8745_A")
     data[i].setHomeologPhase("8745_copy2", "A_tenuisecta_sp3_8745_B")
