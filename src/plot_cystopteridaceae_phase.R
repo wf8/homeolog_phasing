@@ -14,8 +14,8 @@ library(dplyr)
 library(ggtree)
 
 
-tree_file = 'src/output/cystopteridaceae_v2_map_rooted.tre'
-input_dir = 'src/output/cystopteridaceae_v2__'
+tree_file = 'src/output/cystopteridaceae_map_rooted.tree'
+input_dir = 'src/output/cystopteridaceae_'
 output_dir = 'src/output/'
 
 # names of the loci in the log file
@@ -143,26 +143,26 @@ homologized = function (p, data, data_labels, offset = 0, width = 1, low = "gree
 
 
 # polyploid samples and their tips
-samples = list('xCystG_7974' = c('xCystG_7974_A', 'xCystG_7974_B'),
-               'xCystC_7974' = c('xCystC_7974_A', 'xCystC_7974_B'),
-               'G_rob_7945' = c('G_rob_7945_A', 'G_rob_7945_B'),
-               'G_rem_4862' = c('G_rem_4862_A', 'G_rem_4862_B'),
-               'G_oyaC_8739' = c('G_oyaC_8739_A', 'G_oyaC_8739_B'),
-               'G_dry_7981' = c("G_dry_7981a_A","G_dry_7981a_B","G_dry_7981_A","G_dry_7981_B"),
-               'G_dis_7751' = c("G_dis_7751a_A","G_dis_7751_A"),
-               'G_con_6979' = c("G_con_6979_A","G_con_6979_B"),
-               'C_uta_6848' = c("C_uta_6848_A","C_uta_6848_B"),
-               'C_tenu_6387' = c("C_tenu_6387_A","C_tenu_6387_B"),
-               'C_tas_6379' = c("C_tas_6379_C","C_tas_6379_B","C_tas_6379_A"),
-               'C_sudB_8674' = c("C_sudB_8674_A","C_sudB_8674_B"),
-               'C_pelA_6055' = c("C_pelA_6055_A","C_pelA_6055_B"),
-               'C_mon_7943' = c("C_mon_7943_B","C_mon_7943_A"),
-               'C_fraB_7248' = c("C_fraB_7248_A","C_fraB_7248_B"),
-               'C_fraA_7009' = c("C_fraA_7009_A","C_fraA_7009_B"),
-               'C_dia_6380' = c("C_dia_6380_A","C_dia_6380_B"),
-               'A_tenC_8745' = c("A_tenC_8745_A","A_tenC_8745_B"),
-               'A_tenB_8704' = c("A_tenB_8704_A","A_tenB_8704_B"),
-               'A_tai_6137' = c("A_tai_6137_A","A_tai_6137_B"))
+samples = list('A_taiwaniana_6137' = c("A_taiwaniana_6137_A", "A_taiwaniana_6137_B"),
+    'A_tenuisecta_sp2_8704' = c("A_tenuisecta_sp2_8704_A", "A_tenuisecta_sp2_8704_B"),
+    'A_tenuisecta_sp3_8745' = c("A_tenuisecta_sp3_8745_A", "A_tenuisecta_sp3_8745_B"),
+    'C_diaphana_6380' = c("C_diaphana_6380_A", "C_diaphana_6380_B"),
+    'C_fragilis_sp1_7009' = c("C_fragilis_sp1_7009_A", "C_fragilis_sp1_7009_B"),
+    'C_fragilis_sp2_7248' = c("C_fragilis_sp2_7248_A", "C_fragilis_sp2_7248_B"),
+    'C_montana_7943' = c("C_montana_7943_A", "C_montana_7943_B"),
+    'C_pellucida_6055'  = c("C_pellucida_6055_A", "C_pellucida_6055_B"),
+    'C_sudetica_8674' = c("C_sudetica_8674_A", "C_sudetica_8674_B"),
+    'C_tasmanica_6379' = c("C_tasmanica_6379_A", "C_tasmanica_6379_B"),
+    'C_tenuis_6387' = c("C_tenuis_6387_A", "C_tenuis_6387_B"),
+    'C_utahensis_6848' = c("C_utahensis_6848_A", "C_utahensis_6848_B"),
+    'G_continentale_6979' = c("G_continentale_6979_A", "G_continentale_6979_B"),
+    'G_disjunctum_7751' = c("G_disjunctum_7751_A", "G_disjunctum_7751_B"),
+    'G_oyamense_sp2_8739' = c("G_oyamense_sp2_8739_A", "G_oyamense_sp2_8739_B"),
+    'G_remotepinnatum_4862' = c("G_remotepinnatum_4862_A", "G_remotepinnatum_4862_B"),
+    'G_robertianum_7945' = c("G_robertianum_7945_A", "G_robertianum_7945_B"),
+    'G_dryopteris_7981' = c("G_dryopteris_7981_A", "G_dryopteris_7981_B", "G_dryopteris_7981_C", "G_dryopteris_7981_D"),
+    'xCystocarpium_7974' = c("xCystocarpium_7974_A", "xCystocarpium_7974_B", "xCystocarpium_7974_C","xCystocarpium_7974_D"))
+
 
 # populate empty dataframes to hold results
 map_prob_results = data.frame()
@@ -240,12 +240,12 @@ tree = treeio::read.beast(tree_file)
 p = ggtree(tree) 
 p = p + geom_tiplab(size=2, align=T, linesize=0.25, offset=0.0005)  
 p = homologized(p, map_prob_results, joint_map_phase_results, 
-                offset=0.012, low="#EE0000", mid="#FF0099", high="#DDDDFF", 
+                offset=0.022, low="#EE0000", mid="#FF0099", high="#DDDDFF", 
              colnames_position="top", font.size=2, width=0.5,
              legend_title="Posterior\nProbability") 
 p = p + theme(legend.text=element_text(size=6),
               legend.title=element_text(size=8))
 #p = p + scale_fill_viridis_c(option="D", name="Posterior\nProbability", na.value="white")
 #p = p + scale_color_viridis_c(option="D", name="Posterior\nProbability", na.value="white")
-ggsave('homologized_joint_MAP_v2.pdf')
+ggsave('homologized_joint_MAP.pdf')
 
