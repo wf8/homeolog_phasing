@@ -1,1 +1,29 @@
 q()
+alignments
+data[1].taxa()
+data[1].addMissingTaxa(8704_BLANK, 8704_BLANK2)
+data[1].addMissingTaxa("8704_BLANK", "8704_BLANK2")
+data[1].addMissingTaxa([8704_BLANK, 8704_BLANK2])
+data[1].addMissingTaxa([ 8704_BLANK, 8704_BLANK2 ])
+data[1].addMissingTaxa("8704_BLANK")
+q()
+alignments = [ "./APP_alloPPnet_version_reduced.nex",
+              "./GAP_alloPPnet_version_reduced.nex",
+              "./IBR_alloPPnet_version_reduced.nex",               "./PGI_alloPPnet_version_reduced.nex"]
+q()
+alignments = [ "./APP_alloPPnet_version_reduced.nex",
+               "./GAP_alloPPnet_version_reduced.nex",
+               "./IBR_alloPPnet_version_reduced.nex",
+               "./PGI_alloPPnet_version_reduced.nex"]
+num_loci = alignments.size()
+for (i in 1:num_loci) {
+    data[i] = readDiscreteCharacterData(alignments[i])
+}
+for (i in 1:num_loci) {
+   # add missing allele
+    data[i].addMissingTaxa("7981_BLANK")
+}
+missingTax <- v("8704_BLANK", "8704_BLANK2", "C_bulbifera_7650b", "6380_BLANK", "6380_BLANK2", "7751_BLANK", "7981_BLANK2", "G_oyamense_sp1_6399b")
+data[1].addMissingTaxa( missingTax )
+data[1].taxa()
+q()

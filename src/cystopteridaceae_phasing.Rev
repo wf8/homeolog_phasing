@@ -4,7 +4,15 @@
 #
 # Updated 20201017, CJR
 
-output_file = "output/cystopteridaceae"
+
+## This script can run each of three different models, depending on what "run" is set to:
+	## "run1" includes swapping on four tips for 7981 and two tips for 6379 (this was the original version that I ran. Inspection showed that maybe 7981 had one too many tips, and 6379 one too few, however -- hence the other runs)
+	## "run2" includes swapping on four tips for 7981 and three tips for 6379
+	## "run3" includes swapping on three tips for 7981, and three for 6379
+
+run = "run3"
+
+output_file = "output/cystopteridaceae" + run
 
 # read in data
 alignments = [ "../data/cystopteridaceae/finalVersions/APP_toHomologizer.nex",
@@ -20,8 +28,7 @@ for (i in 1:num_loci) {
 
 
 
-## add missing taxa
-
+## add missing taxa ## TODO - is there away to add in the names with "BLANK" automatically here?
 # for (i in 1:num_loci) {
 #     for (j in 1:num_loci) {
 #         data[i].addMissingTaxa(data[j].taxa())
@@ -34,10 +41,15 @@ for (i in 1:num_loci) {
 #     }
 # }
 
+
+## Adding in missing taxa
 for (i in 1:num_loci) {
-   # add missing allele
+   # Adding additional tip for 7981, because it's not clear how many homeologs/alleles it has
     data[i].addMissingTaxa("7981_BLANK")
-}
+   # Adding additional tip for 6379 (looks like the copies at one locus are allelic rather than homeologous)
+    data[i].addMissingTaxa("6379_BLANK2")
+
+}  ##### TODO --have to set the intial phase of this 6379 tip, turn of swapping for some of the runs, and prune the unswapped tip out of the trees?
 
 # # Adding missing taxa to APP
 missingTax <- v("8704_BLANK", "8704_BLANK2", "C_bulbifera_7650b", "6380_BLANK", "6380_BLANK2", "7751_BLANK", "7981_BLANK2", "G_oyamense_sp1_6399b")
@@ -61,25 +73,18 @@ num_tips = data[1].ntaxa()
 
 # # Printing the taxon list for each locus, as a check
 # for (i in 1:num_loci) {
-#    # add missing allele
 #     data[i].taxa()
 # }
 
 
 
-## set initial phase
-## First, do all the ones that don't have any missing data
+## Set initial phase
+## First, do all the ones that don't have any missing data (the sequence names for these will be the same for all loci, so can be done in a loop)
 for (i in 1:num_loci) {
     data[i].setHomeologPhase("6137_copy1", "A_taiwaniana_6137_A")
     data[i].setHomeologPhase("6137_copy2", "A_taiwaniana_6137_B")
-    # data[i].setHomeologPhase("8704_copy1", "A_tenuisecta_sp2_8704_A") # Some loci are missing this copy (so it's called "BLANK" and need to map it locus-by-locus) 
-    # data[i].setHomeologPhase("8704_copy2", "A_tenuisecta_sp2_8704_B")
     data[i].setHomeologPhase("8745_copy1", "A_tenuisecta_sp3_8745_A")
     data[i].setHomeologPhase("8745_copy2", "A_tenuisecta_sp3_8745_B")
-    # data[i].setHomeologPhase("6380_copy1", "C_diaphana_6380_A")
-    # data[i].setHomeologPhase("6380_copy2", "C_diaphana_6380_B")
-    # data[i].setHomeologPhase("7009_copy1", "C_fragilis_sp1_7009_A")
-    # data[i].setHomeologPhase("7009_copy2", "C_fragilis_sp1_7009_B")
     data[i].setHomeologPhase("7248_copy1", "C_fragilis_sp2_7248_A")
     data[i].setHomeologPhase("7248_copy2", "C_fragilis_sp2_7248_B")
     data[i].setHomeologPhase("7943_copy1", "C_montana_7943_A")
@@ -88,20 +93,11 @@ for (i in 1:num_loci) {
     data[i].setHomeologPhase("6055_copy2", "C_pellucida_6055_B")
     data[i].setHomeologPhase("8674_copy1", "C_sudetica_8674_A")
     data[i].setHomeologPhase("8674_copy2", "C_sudetica_8674_B")
-    # data[i].setHomeologPhase("6379_copy1", "C_tasmanica_6379_A")
-    # data[i].setHomeologPhase("6379_copy2", "C_tasmanica_6379_B")
+    data[i].setHomeologPhase("6379_BLANK2", "C_tasmanica_6379_C")
     data[i].setHomeologPhase("6387_copy1", "C_tenuis_6387_A")
     data[i].setHomeologPhase("6387_copy2", "C_tenuis_6387_B")
-    # data[i].setHomeologPhase("6848_copy1", "C_utahensis_6848_A")
-    # data[i].setHomeologPhase("6848_copy2", "C_utahensis_6848_B")
     data[i].setHomeologPhase("6979_copy1", "G_continentale_6979_A")
     data[i].setHomeologPhase("6979_copy2", "G_continentale_6979_B")
-    # data[i].setHomeologPhase("7751_copy1", "G_disjunctum_7751_A")
-    # data[i].setHomeologPhase("7751_copy2", "G_disjunctum_7751_B")
-    # data[i].setHomeologPhase("7981_copy1", "G_dryopteris_7981_A")
-    # data[i].setHomeologPhase("7981_copy2", "G_dryopteris_7981_B")
-    # data[i].setHomeologPhase("7981_copy3", "G_dryopteris_7981_C")
-    # data[i].setHomeologPhase("7981_copy4", "G_dryopteris_7981_D")
     data[i].setHomeologPhase("8739_copy1", "G_oyamense_sp2_8739_A")
     data[i].setHomeologPhase("8739_copy2", "G_oyamense_sp2_8739_B")
     data[i].setHomeologPhase("4862_copy1", "G_remotepinnatum_4862_A")
@@ -114,7 +110,7 @@ for (i in 1:num_loci) {
     data[i].setHomeologPhase("7974_copy4", "xCystocarpium_7974_D")
 }
 
-## Then do APP for the remaining ones
+## Then do APP for the remaining ones (these samples are missing from some loci, so there will be sequences with "BLANK" added to their name, so have to be done locus-by-locus)
 data[1].setHomeologPhase("8704_BLANK", "A_tenuisecta_sp2_8704_A")
 data[1].setHomeologPhase("8704_BLANK2", "A_tenuisecta_sp2_8704_B")
 data[1].setHomeologPhase("6380_BLANK", "C_diaphana_6380_A")
@@ -187,23 +183,6 @@ data[4].setHomeologPhase("7981_copy3", "G_dryopteris_7981_C")
 data[4].setHomeologPhase("7981_BLANK", "G_dryopteris_7981_D")
 
 
-# data[i].setHomeologPhase("8704_copy1", "A_tenuisecta_sp2_8704_A")
-# data[i].setHomeologPhase("8704_copy2", "A_tenuisecta_sp2_8704_B")
-# data[i].setHomeologPhase("6380_copy1", "C_diaphana_6380_A")
-# data[i].setHomeologPhase("6380_copy2", "C_diaphana_6380_B")
-# data[i].setHomeologPhase("7009_copy1", "C_fragilis_sp1_7009_A")
-# data[i].setHomeologPhase("7009_copy2", "C_fragilis_sp1_7009_B")
-# data[i].setHomeologPhase("6379_copy1", "C_tasmanica_6379_A")
-# data[i].setHomeologPhase("6379_copy2", "C_tasmanica_6379_B")
-# data[i].setHomeologPhase("6848_copy1", "C_utahensis_6848_A")
-# data[i].setHomeologPhase("6848_copy2", "C_utahensis_6848_B")
-# data[i].setHomeologPhase("7751_copy1", "G_disjunctum_7751_A")
-# data[i].setHomeologPhase("7751_copy2", "G_disjunctum_7751_B")
-# data[i].setHomeologPhase("7981_copy1", "G_dryopteris_7981_A")
-# data[i].setHomeologPhase("7981_copy2", "G_dryopteris_7981_B")
-# data[i].setHomeologPhase("7981_copy3", "G_dryopteris_7981_C")
-# data[i].setHomeologPhase("7981_copy4", "G_dryopteris_7981_D")
-
 
 
 mvi = 0
@@ -249,6 +228,12 @@ for (i in 1:num_loci) {
     moves[++mvi] = mvHomeologPhase(ctmc[i], "C_pellucida_6055_A", "C_pellucida_6055_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "C_sudetica_8674_A", "C_sudetica_8674_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "C_tasmanica_6379_A", "C_tasmanica_6379_B", weight=w)
+    
+    if(run == "run2" | run == "run3"){
+    	moves[++mvi] = mvHomeologPhase(ctmc[i], "C_tasmanica_6379_A", "C_tasmanica_6379_C", weight=w)
+    	moves[++mvi] = mvHomeologPhase(ctmc[i], "C_tasmanica_6379_B", "C_tasmanica_6379_C", weight=w)
+    } # runs2 and 3 are the ones with an extra C_tasmanica tip (in the swapping)
+
     moves[++mvi] = mvHomeologPhase(ctmc[i], "C_tenuis_6387_A", "C_tenuis_6387_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "C_utahensis_6848_A", "C_utahensis_6848_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "G_continentale_6979_A", "G_continentale_6979_B", weight=w)
@@ -260,9 +245,12 @@ for (i in 1:num_loci) {
     moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_C", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_B", "G_dryopteris_7981_C", weight=w)
-    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
-    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
-    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+    
+    if(run == "run1" | run == "run2"){
+    	moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+    	moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+    	moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+	} # run1 and run2 are the two runs where swapping is allowed to the fourth 7981 tip
 
     moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystocarpium_7974_A", "xCystocarpium_7974_B", weight=w)
     moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystocarpium_7974_A", "xCystocarpium_7974_C", weight=w)
@@ -272,7 +260,18 @@ for (i in 1:num_loci) {
     moves[++mvi] = mvHomeologPhase(ctmc[i], "xCystocarpium_7974_C", "xCystocarpium_7974_D", weight=w)
 }
 
+if(run == "run1"){
+	pruned_tree := fnPruneTree(tree, prune=v("C_tasmanica_6379_C"))
+} # The tip that has all blank sequences, and is never swapped to, will presumably float around everywhere, so removing it from the trees
+
+if(run == "run3"){
+	pruned_tree := fnPruneTree(tree, prune=v("G_dryopteris_7981_D"))
+}
+
+
 mymodel = model(Q)
+
+
 
 monitors[1] = mnModel(filename=output_file + ".log", printgen=1)
 monitors[2] = mnFile(filename=output_file + ".trees", printgen=1, tree)
@@ -282,10 +281,21 @@ monitors[5] = mnHomeologPhase(filename=output_file + "_phase2.log", printgen=1, 
 monitors[6] = mnHomeologPhase(filename=output_file + "_phase3.log", printgen=1, ctmc[3])
 monitors[7] = mnHomeologPhase(filename=output_file + "_phase4.log", printgen=1, ctmc[4])
 
+if(run == "run1" | run == "run3"){
+	monitors[8] = mnFile(filename=output_file + "pruned.trees", printgen=1, pruned_tree)
+} # For those cases where there is an entirely blank species tree tip (with no swapping to it), want to log the pruned trees, too
+
 mymcmc = mcmc(mymodel, monitors, moves)
-mymcmc.run(generations=10000)
+mymcmc.run(generations=6000)
     
 treetrace = readTreeTrace(output_file + ".trees", treetype="clock", burnin=0.5)
 map_tree = mapTree(treetrace, output_file + "_map.tree")
 mcc_tree = mccTree(treetrace, output_file + "_mcc.tree")
+
+if(run == "run1" | run == "run3"){
+	treetrace = readTreeTrace(output_file + "pruned.trees", treetype="clock", burnin=0.5)
+	map_tree = mapTree(treetrace, output_file + "_pruned_map.tree")
+	mcc_tree = mccTree(treetrace, output_file + "_pruned_mcc.tree")
+} # For those cases where there is an entirely blank species tree tip (with no swapping to it), want to log the pruned trees, too
+
 mymcmc.operatorSummary()
