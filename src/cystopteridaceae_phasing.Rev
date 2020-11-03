@@ -49,7 +49,7 @@ for (i in 1:num_loci) {
    # Adding additional tip for 6379 (looks like the copies at one locus are allelic rather than homeologous)
     data[i].addMissingTaxa("6379_BLANK2")
 
-}  ##### TODO --have to set the intial phase of this 6379 tip, turn of swapping for some of the runs, and prune the unswapped tip out of the trees?
+}  
 
 # # Adding missing taxa to APP
 missingTax <- v("8704_BLANK", "8704_BLANK2", "C_bulbifera_7650b", "6380_BLANK", "6380_BLANK2", "7751_BLANK", "7981_BLANK2", "G_oyamense_sp1_6399b")
@@ -272,17 +272,25 @@ if(run == "run3"){
 mymodel = model(Q)
 
 
+mni = 0
 
-monitors[1] = mnModel(filename=output_file + ".log", printgen=1)
-monitors[2] = mnFile(filename=output_file + ".trees", printgen=1, tree)
-monitors[3] = mnScreen(printgen=1)
-monitors[4] = mnHomeologPhase(filename=output_file + "_phase1.log", printgen=1, ctmc[1])
-monitors[5] = mnHomeologPhase(filename=output_file + "_phase2.log", printgen=1, ctmc[2])
-monitors[6] = mnHomeologPhase(filename=output_file + "_phase3.log", printgen=1, ctmc[3])
-monitors[7] = mnHomeologPhase(filename=output_file + "_phase4.log", printgen=1, ctmc[4])
+# The er and pi parameters are in vectors, so won't get logged to the output file; need this workaround here (adding them to a monitor individually)
+monitors[++mni] = mnFile(filename=output_file + "allparams.log", printgen=1)
+for(i in 1:num_loci){
+	monitors[mni].addVariable(er[i])
+    monitors[mni].addVariable(pi[i])
+}
+
+monitors[++mni] = mnModel(filename=output_file + ".log", printgen=1)
+monitors[++mni] = mnFile(filename=output_file + ".trees", printgen=1, tree)
+monitors[++mni] = mnScreen(printgen=1)
+monitors[++mni] = mnHomeologPhase(filename=output_file + "_phase1.log", printgen=1, ctmc[1])
+monitors[++mni] = mnHomeologPhase(filename=output_file + "_phase2.log", printgen=1, ctmc[2])
+monitors[++mni] = mnHomeologPhase(filename=output_file + "_phase3.log", printgen=1, ctmc[3])
+monitors[++mni] = mnHomeologPhase(filename=output_file + "_phase4.log", printgen=1, ctmc[4])
 
 if(run == "run1" | run == "run3"){
-	monitors[8] = mnFile(filename=output_file + "pruned.trees", printgen=1, pruned_tree)
+	monitors[++mni] = mnFile(filename=output_file + "pruned.trees", printgen=1, pruned_tree)
 } # For those cases where there is an entirely blank species tree tip (with no swapping to it), want to log the pruned trees, too
 
 mymcmc = mcmc(mymodel, monitors, moves)
