@@ -2,7 +2,7 @@
 # Performs homeolog phasing on the Cystopteridaceae Rothfels et al. 2017 dataset.
 # Will Freyman
 #
-# Updated 20201017, CJR
+# Updated 20201101, CJR
 
 
 ## This script can run each of three different models, depending on what "run" is set to:
@@ -10,7 +10,7 @@
 	## "run2" includes swapping on four tips for 7981 and three tips for 6379
 	## "run3" includes swapping on three tips for 7981, and three for 6379
 
-run = "run3"
+run = "run1"
 
 output_file = "output/cystopteridaceae" + run
 
@@ -294,14 +294,14 @@ if(run == "run1" | run == "run3"){
 } # For those cases where there is an entirely blank species tree tip (with no swapping to it), want to log the pruned trees, too
 
 mymcmc = mcmc(mymodel, monitors, moves)
-mymcmc.run(generations=6000)
+mymcmc.run(generations=10000)
     
-treetrace = readTreeTrace(output_file + ".trees", treetype="clock", burnin=0.5)
+treetrace = readTreeTrace(output_file + ".trees", treetype="clock", burnin=0.6)
 map_tree = mapTree(treetrace, output_file + "_map.tree")
 mcc_tree = mccTree(treetrace, output_file + "_mcc.tree")
 
 if(run == "run1" | run == "run3"){
-	treetrace = readTreeTrace(output_file + "pruned.trees", treetype="clock", burnin=0.5)
+	treetrace = readTreeTrace(output_file + "pruned.trees", treetype="clock", burnin=0.6)
 	map_tree = mapTree(treetrace, output_file + "_pruned_map.tree")
 	mcc_tree = mccTree(treetrace, output_file + "_pruned_mcc.tree")
 } # For those cases where there is an entirely blank species tree tip (with no swapping to it), want to log the pruned trees, too
