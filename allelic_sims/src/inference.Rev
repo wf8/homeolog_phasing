@@ -1,0 +1,103 @@
+#
+# Sets up either a homologizer model with or without dummy tips to test for
+# allelic variation.
+#
+# For sim_num 0 - 499 there is *no* true allelic variation.
+# For sim_num 500 - 999 there is allelic variation in loci 3 & 4.
+#
+seed = sim_num
+num_loci = 4
+mvi = 0
+mni = 0
+
+# use a dummy tip for inference/Bayes factors
+dummy_tip = TRUE
+
+if (dummy_tip) {
+    out_dir = "output_w_dummy/"
+} else {
+    out_dir = "output_no_dummy/"
+}
+
+
+
+for (i in 1:num_loci) {
+    
+    data[i] = readDiscreteCharacterData("data/" + sim_num + "/alignment" + i + ".fasta")
+
+    if (sim_num < 500) {
+        # no allelic variation
+        data[i].removeTaxa("tetra_A_2")
+    } else {
+        # with allelic variation (but make it look like there is none)
+        if (i < 3) {
+            data[i].removeTaxa("tetra_A_2")
+        } else {
+            data[i].removeTaxa("tetra_B_1")
+            data[i].setTaxonName("tetra_A_2", "tetra_B_1")
+        }
+    }
+
+    if (dummy_tip) {
+        data[i].addMissingTaxa("tetra_BLANK")
+        data[i].setHomeologPhase("tetra_A_1", "tetra_Y_1")
+        data[i].setHomeologPhase("tetra_B_1", "tetra_X_1")
+        data[i].setHomeologPhase("tetra_BLANK", "tetra_Z_1")
+    } else {
+        data[i].setHomeologPhase("tetra_A_1", "tetra_Y_1")
+        data[i].setHomeologPhase("tetra_B_1", "tetra_X_1")
+    }
+}
+
+n_tips = data[1].ntaxa()
+n_branches = 2 * n_tips - 3
+for (i in 1:n_branches) {
+    branch_lengths[i] ~ dnExponential(10)
+    moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=2)
+}
+topology ~ dnUniformTopology(data[1].taxa())
+moves[++mvi] = mvNNI(topology, weight=20.0)
+moves[++mvi] = mvSPR(topology, weight=20.0)
+tree := treeAssembly(topology, branch_lengths)
+
+for (i in 1:num_loci) {
+
+    # model of molecular evolution
+    er_prior[i] <- v(1,1,1,1,1,1)
+    er[i] ~ dnDirichlet(er_prior[i])
+    pi_prior[i] <- v(1,1,1,1)
+    pi[i] ~ dnDirichlet(pi_prior[i])
+    Q[i] := fnGTR(er[i], pi[i])
+
+    ctmc[i] ~ dnPhyloCTMC(tree=tree, 
+                          Q=Q[i], 
+                          type="DNA") 
+
+    ctmc[i].clamp(data[i])
+     
+    # moves for each polyploid individual
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "tetra_X_1", "tetra_Y_1", weight=5)
+    if (dummy_tip) {
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "tetra_X_1", "tetra_Z_1", weight=5)
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "tetra_Y_1", "tetra_Z_1", weight=5)
+    }
+
+}
+
+mymodel = model(Q[1])
+
+monitors[++mni] = mnModel(filename=out_dir + sim_num + "/phasing.log", printgen=1)
+monitors[++mni] = mnFile(filename=out_dir + sim_num + "/phasing.trees", printgen=1, tree)
+monitors[++mni] = mnScreen(printgen=1)
+for (i in 1:num_loci) {
+    monitors[++mni] = mnHomeologPhase(filename=out_dir + sim_num + "/phase" + i + ".log", printgen=1, ctmc[i])
+}
+
+mymcmc = mcmc(mymodel, monitors, moves)
+mymcmc.run(generations=2000)
+    
+treetrace = readTreeTrace(out_dir + sim_num + "/phasing.trees", treetype="clock", burnin=0.25)
+map_tree = mapTree(treetrace,out_dir + sim_num + "/phasing.tree")
+
+mymcmc.operatorSummary()
+quit()

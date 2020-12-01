@@ -1,0 +1,74 @@
+#
+# Simulate species tree under birth-death process and gene trees under
+# the multi-species coalescent. Then simulate gene sequences over the 
+# gene trees.
+#
+# Simulates allelic variation in subgenome A of a tetraploid. This results
+# in three copies of each locus for the tetraploid.
+#
+
+
+#sim_num = 0
+seed = sim_num
+seq_length = 800
+branch_rate = 0.01
+num_loci = 4
+num_species = 20
+pop_size = 0.001
+
+# set up taxa for species tree
+# genomes A and B for a tetraploid
+species[1] = taxon(taxonName="tetra_A", speciesName="tetra_A")
+species[2] = taxon(taxonName="tetra_B", speciesName="tetra_B")
+# the rest are diploid lineages
+for (i in 3:num_species) {
+    species[i] = taxon(taxonName="dip_" + i, speciesName="dip_" + i)
+}
+
+# set up gene trees:
+# allelic variation for subgenome A
+individuals[1] = taxon(taxonName="tetra_A_1", speciesName="tetra_A")
+individuals[2] = taxon(taxonName="tetra_A_2", speciesName="tetra_A")
+# only one copy of subgenome B
+individuals[3] = taxon(taxonName="tetra_B_1", speciesName="tetra_B")
+for (i in 4:num_species) {
+        individuals[i] = taxon(taxonName="dip_" + i, speciesName="dip_" + i)
+}
+
+root_age <- 50
+sampling_fraction <- 0.1
+speciation <- 0.2
+extinction <- 0.01
+
+species_tree ~ dnBDP(lambda=speciation, 
+                     mu=extinction, 
+                     rootAge=root_age, 
+                     rho=sampling_fraction, 
+                     taxa=species)
+write(species_tree, filename="data/" + sim_num + "/species_tree.tree")
+
+for (i in 1:num_loci) {
+
+    # simulate gene tree
+    gene_tree[i] ~ dnMultiSpeciesCoalescent(speciesTree=species_tree, 
+                                            Ne=pop_size, 
+                                            taxa=individuals)
+    write(gene_tree[i], filename="data/" + sim_num + "/gene_tree" + i + ".tree")
+
+    # model of molecular evolution
+    er_prior <- v(1,1,1,1,1,1)
+    er ~ dnDirichlet(er_prior)
+    pi_prior <- v(1,1,1,1)
+    pi ~ dnDirichlet(pi_prior)
+    Q := fnGTR(er, pi)
+
+    ctmc ~ dnPhyloCTMC(tree=gene_tree[i], 
+                       Q=Q, 
+                       type="DNA", 
+                       nSites=seq_length, 
+                       branchRates=branch_rate)
+
+    writeFasta("data/" + sim_num + "/alignment" + i + ".fasta", ctmc)
+
+}
+quit()
