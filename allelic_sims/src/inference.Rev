@@ -11,8 +11,7 @@ mvi = 0
 mni = 0
 
 # use a dummy tip for inference/Bayes factors
-dummy_tip = TRUE
-
+#dummy_tip = TRUE
 if (dummy_tip) {
     out_dir = "output_w_dummy/"
 } else {
