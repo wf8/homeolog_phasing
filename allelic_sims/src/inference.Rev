@@ -11,14 +11,21 @@ mvi = 0
 mni = 0
 
 # use a dummy tip for inference/Bayes factors
+#bayes_factors = FALSE
 #dummy_tip = TRUE
-if (dummy_tip) {
-    out_dir = "output_w_dummy/"
+if (bayes_factors) {
+    if (dummy_tip) {
+        out_dir = "bf_output_w_dummy/"
+    } else {
+        out_dir = "bf_output_no_dummy/"
+    }
 } else {
-    out_dir = "output_no_dummy/"
+    if (dummy_tip) {
+        out_dir = "output_w_dummy/"
+    } else {
+        out_dir = "output_no_dummy/"
+    }
 }
-
-
 
 for (i in 1:num_loci) {
     
@@ -92,11 +99,24 @@ for (i in 1:num_loci) {
     monitors[++mni] = mnHomeologPhase(filename=out_dir + sim_num + "/phase" + i + ".log", printgen=1, ctmc[i])
 }
 
-mymcmc = mcmc(mymodel, monitors, moves)
-mymcmc.run(generations=2000)
-    
-treetrace = readTreeTrace(out_dir + sim_num + "/phasing.trees", treetype="clock", burnin=0.25)
-map_tree = mapTree(treetrace,out_dir + sim_num + "/phasing.tree")
+if (bayes_factors) {
 
-mymcmc.operatorSummary()
+    pow_p = powerPosterior(mymodel, moves, monitors, out_dir + sim_num + "/.out", 
+                           cats=50, sampleFreq=1) 
+    pow_p.burnin(generations=500, tuningInterval=50)
+    pow_p.run(generations=500)  
+    ss = steppingStoneSampler(file=out_dir + sim_num + "/.out", 
+                              powerColumnName="power", likelihoodColumnName="likelihood")
+    out_string = sim_num + "," + ss.marginal() + "\n"
+    write(out_string, filename=out_dir + "marginals.csv", append=TRUE) 
+
+} else {
+
+    mymcmc = mcmc(mymodel, monitors, moves)
+    mymcmc.run(generations=2000)
+    treetrace = readTreeTrace(out_dir + sim_num + "/phasing.trees", treetype="clock", burnin=0.25)
+    map_tree = mapTree(treetrace,out_dir + sim_num + "/phasing.tree")
+    mymcmc.operatorSummary()
+
+}
 quit()
