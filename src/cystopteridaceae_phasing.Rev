@@ -10,7 +10,7 @@
 	## "run2" includes swapping on four tips for 7981 and three tips for 6379
 	## "run3" includes swapping on three tips for 7981, and three for 6379
 
-run = "run2"
+run = "run3"
 bayes_factors = TRUE
 
 output_file = "output/cystopteridaceae" + run
@@ -295,9 +295,9 @@ if(run == "run1" | run == "run3"){
 } # For those cases where there is an entirely blank species tree tip (with no swapping to it), want to log the pruned trees, too
 
 if (bayes_factors) {
-    pow_p = powerPosterior(mymodel, moves, monitors, output_file + ".out", cats=50) 
-    pow_p.burnin(generations=6000, tuningInterval=600)
-    pow_p.run(generations=6000)  
+    pow_p = powerPosterior(mymodel, moves, monitors, output_file + ".out", cats=50, sampleFreq=1) 
+    pow_p.burnin(generations=2000, tuningInterval=200)
+    pow_p.run(generations=2000)  
     ss = steppingStoneSampler(file=output_file + ".out", powerColumnName="power", likelihoodColumnName="likelihood")
     ss.marginal() 
 } else {
