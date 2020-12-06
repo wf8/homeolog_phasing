@@ -5,8 +5,7 @@
 ##############################################
 
 ########## INPUTS ##########
-# 1. A file with FULL paths to gene file locations, one per line
-# 2. A gene copy map that will set initial phase for copies by sample and subgenome
+# 1. A gene copy map that will set initial phase for copies by sample and subgenome
 #       This should be a comma separated values file (CSV)
 #       Gene columns should be in the same order as the gene list
 ############################
@@ -58,3 +57,30 @@ for(gene in 3:length(genecopymap)){
 }
 cat(missingtaxa.commands,file="InitialPhase.rev")
 cat(initial.phase.commands,file="InitialPhase.rev",append=TRUE)
+
+########## Write mvHomeologPhase commands ##########
+
+mv.text = "moves[++mvi] = mvHomeologPhase(ctmc[%d], \"%s\", \"%s\", weight=w)\n"
+subgenomes.by.sample = split(genecopymap$Subgenome,genecopymap$Sample)
+
+make.phase.comb = function(subgenome.samples,geneNum){
+  subgenome.combinations = combn(subgenome.samples,2)
+  apply(subgenome.combinations,2,function(x){
+    sprintf(mv.text,
+            geneNum,
+            genecopymap[x[1],2],
+            genecopymap[x[2],2]
+    )
+  })
+}
+
+mv.commands = rep(NA,numLoci*length(subgenomes.by.sample))
+my.index=1
+for(gene in 1:4){
+  for(sample in 1:length(subgenomes.by.sample)){
+    mv.commands[my.index] = make.phase.comb(subgenomes.by.sample[[sample]],gene)
+    my.index = my.index + 1
+  }
+}
+
+cat(mv.commands,file="PhaseMoves.rev")

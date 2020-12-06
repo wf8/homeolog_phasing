@@ -1,4 +1,12 @@
-alignments = readTable("cystopteridaceae_genelist.txt")
+###### Change these to match the appropriate file names:
+genelist= "cystopteridaceae_genelist.txt"
+initialPhaseFn = "InitialPhase.rev"
+phaseMovesFn = "PhaseMoves.rev"
+output_file = "cystopteridaceae"
+
+###### All other RevBayes parameters can be set below
+
+alignments = readTable(genelist)
 num_loci = alignments.size()
 
 
@@ -8,7 +16,7 @@ for (i in 1:num_loci) {
 }
 
 # set initial phase and add dummy tips
-source("InitialPhase.rev")
+source(initialPhaseFn)
 
 # add missing taxa
 for (i in 1:num_loci) {
@@ -56,7 +64,7 @@ for (i in 1:num_loci) {
 
 # make phasing proposals
 w = 1/3
-source("PhaseMoves.Rev")
+source(phaseMovesFn)
 #for (i in 1:num_loci) {
 #    # switch phasing proposals
 #    for (j in 1:num_swap){
@@ -70,7 +78,7 @@ monitors[1] = mnModel(filename=output_file + ".log", printgen=1)
 monitors[2] = mnFile(filename=output_file + ".trees", printgen=1, tree)
 monitors[3] = mnScreen(printgen=1)
 for (i in 1:num_loci){
-    monitors[i+3] = mnHomeologPhase(filename=output_file + "_" + alignments[i][1] + "_phase.log", printgen=1, ctmc[i])
+    monitors[i+3] = mnHomeologPhase(filename=output_file + "_gene" + i + "_phase.log", printgen=1, ctmc[i])
 }
 mymcmc = mcmc(mymodel, monitors, moves)
 mymcmc.run(generations=5000)
