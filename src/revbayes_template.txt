@@ -1,0 +1,81 @@
+alignments = readTable("cystopteridaceae_genelist.txt")
+num_loci = alignments.size()
+
+
+#num_swap = label_swap.size()
+for (i in 1:num_loci) {
+    data[i] = readDiscreteCharacterData(alignments[i][1])
+}
+
+# set initial phase and add dummy tips
+source("InitialPhase.rev")
+
+# add missing taxa
+for (i in 1:num_loci) {
+    for (j in 1:num_loci) {
+        data[i].addMissingTaxa(data[j].taxa())
+    }
+}
+num_tips = data[1].ntaxa()
+
+
+#for (i in 1:num_loci) {
+#    for (j in 1:num_swap){
+#        data[i].setHomeologPhase(label_swap[j][1],label_swap[j][1])
+#    }    
+#}
+
+mvi = 0
+
+n_branches = 2 * num_tips - 3
+for (i in 1:n_branches) {
+    branch_lengths[i] ~ dnExponential(10)
+    moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=2)
+}
+topology ~ dnUniformTopology(data[1].taxa())
+moves[++mvi] = mvNNI(topology, weight=20.0)
+moves[++mvi] = mvSPR(topology, weight=20.0)
+tree := treeAssembly(topology, branch_lengths)
+
+for (i in 1:num_loci) {
+    
+    # gtr for each locus
+    er_prior <- v(1,1,1,1,1,1)
+    er[i] ~ dnDirichlet(er_prior)
+    moves[++mvi] = mvSimplexElementScale(er[i], weight=3)
+
+    pi_prior <- v(1,1,1,1)
+    pi[i] ~ dnDirichlet(pi_prior)
+    moves[++mvi] = mvSimplexElementScale(pi[i], weight=3)
+
+    Q[i] := fnGTR(er[i], pi[i])
+
+    ctmc[i] ~ dnPhyloCTMC(tree=tree, Q=Q[i], type="DNA")
+    ctmc[i].clamp(data[i])
+}
+
+# make phasing proposals
+w = 1/3
+source("PhaseMoves.Rev")
+#for (i in 1:num_loci) {
+#    # switch phasing proposals
+#    for (j in 1:num_swap){
+#    moves[++mvi] = mvHomeologPhase(ctmc[i],label_swap[j][1],label_swap[j][2],weight=w)
+#    }
+#}
+
+mymodel = model(Q)
+
+monitors[1] = mnModel(filename=output_file + ".log", printgen=1)
+monitors[2] = mnFile(filename=output_file + ".trees", printgen=1, tree)
+monitors[3] = mnScreen(printgen=1)
+for (i in 1:num_loci){
+    monitors[i+3] = mnHomeologPhase(filename=output_file + "_" + alignments[i][1] + "_phase.log", printgen=1, ctmc[i])
+}
+mymcmc = mcmc(mymodel, monitors, moves)
+mymcmc.run(generations=5000)
+    
+treetrace = readTreeTrace(output_file + ".trees", treetype="clock", burnin=0.25)
+map_tree = mapTree(treetrace, output_file + ".tree")
+
+mymcmc.operatorSummary()
