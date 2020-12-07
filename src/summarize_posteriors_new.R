@@ -44,7 +44,7 @@
 
 args=commandArgs(trailingOnly=TRUE)
 if(length(args) < 2){
-    print("Usage: Rscript --vanilla prefix genecopymap.txt")
+    print("Usage: Rscript --vanilla prefix genecopymap.csv")
     quit()
     }
 # directory that contains the MCMC log files
