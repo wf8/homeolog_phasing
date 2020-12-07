@@ -1,0 +1,4 @@
+/scratch/joh97948/homologizer/homeolog_phasing/data/cystopteridaceae/finalVersions/APP_toHomologizer.nex
+/scratch/joh97948/homologizer/homeolog_phasing/data/cystopteridaceae/finalVersions/GAP_toHomologizer.nex
+/scratch/joh97948/homologizer/homeolog_phasing/data/cystopteridaceae/finalVersions/IBR_toHomologizer.nex
+/scratch/joh97948/homologizer/homeolog_phasing/data/cystopteridaceae/finalVersions/PGI_toHomologizer.nex
