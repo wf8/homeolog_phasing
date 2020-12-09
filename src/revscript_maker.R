@@ -76,7 +76,7 @@ make.phase.comb = function(subgenome.samples,geneNum){
 
 mv.commands = rep(NA,numLoci*length(subgenomes.by.sample))
 my.index=1
-for(gene in 1:4){
+for(gene in 1:numLoci){
   for(sample in 1:length(subgenomes.by.sample)){
     mv.commands[my.index] = make.phase.comb(subgenomes.by.sample[[sample]],gene)
     my.index = my.index + 1
