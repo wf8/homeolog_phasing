@@ -73,7 +73,7 @@ for (sample in names(samples)) {
 
         # read in file and exclude burnin
         f_in = paste0(prefix, '_gene', i, '_phase.log')
-        d = read.csv(f_in, sep='\t')
+        d = read.csv(f_in, sep='\t',check.names=FALSE,row.names=1)
         d = d[floor(nrow(d)*burnin):nrow(d),]
 
         # get joint phase assignments for this locus
