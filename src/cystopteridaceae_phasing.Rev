@@ -189,13 +189,34 @@ data[4].setHomeologPhase("7981_BLANK", "G_dryopteris_7981_D")
 mvi = 0
 
 n_branches = 2 * num_tips - 3
+#for (i in 1:n_branches) {
+#    branch_lengths[i] ~ dnExponential(10)
+#    moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=2)
+#}
+#topology ~ dnUniformTopology(data[1].taxa())
+#moves[++mvi] = mvNNI(topology, weight=20.0)
+#moves[++mvi] = mvSPR(topology, weight=20.0)
+
+up_down_scale_move = ++mvi # Doing it this weird way so that I can reference this move later
+moves[up_down_scale_move] = mvUpDownScale(weight=5.0, lambda=0.01)
+
+branch_length_mean ~ dnExponential(1/0.002) # Hyperprior with a mean value of 0.002
+moves[++mvi] = mvScale(branch_length_mean, lambda=1.0, weight=1.0)
+
 for (i in 1:n_branches) {
-    branch_lengths[i] ~ dnExponential(10)
-    moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=2)
+    branch_lengths[i] ~ dnExponential(1 / branch_length_mean)
+    branch_lengths[i].setValue(0.002)
+    moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=1.0)
+    # Scale the branches one by one
+    moves[up_down_scale_move].addVariable(branch_lengths[i], up=true)
+    # This move scales the branches (and their mean) all at once; helps with mixing early on
 }
+
 topology ~ dnUniformTopology(data[1].taxa())
-moves[++mvi] = mvNNI(topology, weight=20.0)
-moves[++mvi] = mvSPR(topology, weight=20.0)
+moves[++mvi] = mvNNI(topology, weight=50.0)
+moves[++mvi] = mvSPR(topology, weight=50.0)
+
+
 tree := treeAssembly(topology, branch_lengths)
 
 for (i in 1:num_loci) {
@@ -296,8 +317,8 @@ if(run == "run1" | run == "run3"){
 
 if (bayes_factors) {
     pow_p = powerPosterior(mymodel, moves, monitors, output_file + ".out", cats=50, sampleFreq=1) 
-    pow_p.burnin(generations=2000, tuningInterval=200)
-    pow_p.run(generations=2000)  
+    pow_p.burnin(generations=1000, tuningInterval=50)
+    pow_p.run(generations=1000)  
     ss = steppingStoneSampler(file=output_file + ".out", powerColumnName="power", likelihoodColumnName="likelihood")
     ss.marginal() 
 } else {
