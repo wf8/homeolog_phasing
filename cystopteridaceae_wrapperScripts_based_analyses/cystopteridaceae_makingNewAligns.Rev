@@ -1,0 +1,31 @@
+#
+
+output_file = "aligns_cystop/"
+
+# read in data
+alignments = [ "../data/cystopteridaceae/finalVersions/APP_toHomologizer.nex",
+               "../data/cystopteridaceae/finalVersions/GAP_toHomologizer.nex",
+               "../data/cystopteridaceae/finalVersions/IBR_toHomologizer.nex",
+               "../data/cystopteridaceae/finalVersions/PGI_toHomologizer.nex"]
+
+num_loci = alignments.size()
+
+for (i in 1:num_loci) {
+    data[i] = readDiscreteCharacterData(alignments[i])
+}
+
+
+## Adding in missing taxa
+for (i in 1:num_loci) {
+   # Adding additional tip for 7981, because it's not clear how many homeologs/alleles it has
+    data[i].addMissingTaxa("7981_BLANK")
+   # Adding additional tip for 6379 (looks like the copies at one locus are allelic rather than homeologous)
+    data[i].addMissingTaxa("6379_BLANK2")
+
+}  
+
+# Saving the new alignments (including the blank sequences for those two accessions), and writing to file 
+for (i in 1:num_loci) {
+        alignments[i] = output_file + data[i].filename()
+        writeNexus(data[i], alignments[i])
+}
