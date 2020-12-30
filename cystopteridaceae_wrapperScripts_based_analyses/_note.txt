@@ -12,3 +12,4 @@ in which case they'll be treated as a diploid (ie, theywon't be swapped to)
 
 So created aligns_cystop/ for these new alignments (that include the dummy tip sequences for G.dry
 and C.tas)
+
