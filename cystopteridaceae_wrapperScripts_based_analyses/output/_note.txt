@@ -34,7 +34,10 @@ Analysis descriptions:
 			
 			-as above - didn't converge, trees look ok, no MCC or MAP produced for the pruned trees
 			
+	mdl1.1e	-Four runs of mdl1.1 (disjunctum treated as two diploids instead of swapping copies between the tips)
+			-Weights for the phase parameter moves increased to 10*w for the misbehaving ones (C.frag sp1, C.tas, G.dry)
 			
+			-Didn't converge. 1.1e3 was the best.
 			
 Summary -- moreorless where we started -- the runs converge to different distributions. Need 
 				to check the phasing to see if there's something going on there that's noticeable			

@@ -1,13 +1,28 @@
-﻿				b1			b4
-frag sp1		2 1 2 1		1 1 2 2 	All max PP; topologies different
-tas										phasing identical, topologies different
-dry (appVers)	2 b 1 2 	2 1 1 2
-dry ("other")	b 1 b b 	b b b 3		gap and pgi max PP in both, topologies very different
-dry (dis1)		b 2 b 1		b 3 b b 	The two dis drys are close topologically, vary across runs
-dry (dis2)		1 3 2 3		1 2 2 1
-dis				1 2 1 b		1 1 1 b		in b1 only IBR max PP, 3loci max in b4
-
+﻿				b1(good)	b4(bad)		e2(bd)		e3(gd)		b1vb4
+frag sp1		2 1 2 1		1 1 2 2 	2 1 2 1		2 1 2 1		All max PP; topologies different
+tas																phasing identical, topologies different
+dry (appVers)	2 b 1 2 	2 1 1 2					2 b 1 2 
+dry ("other")	b 1 b b 	b b b 3		b 1 b b		b 1 b b		gap and pgi max PP in both, topologies very different
+dry (dis1)		b 2 b 1		b 3 b b 	b 2 b 1		b 2 b 1 	The two dis drys are close topologically, vary across runs
+dry (dis2)		1 3 2 3		1 2 2 1		1 3 2 3		1 3 2 3
+dis				1 2 1 b		1 1 1 b		NA			NA			in b1 only IBR max PP, 3loci max in b4
+		
 Aside from these cases, even the weak phasing tends to be the same across the two runs
 
-The rate multipliers for these two runs are quite different, with b1 being higher for all three than b4. 
+The rate multipliers for the two b runs are quite different, with b1 being higher for all three than b4. 
 Maybe removing those parameters will help with convergence
+
+The "good" and "bad" e runs each match the "good" b run for the phasing that differed between the b runs
+So will do a separate summary for the e runs, to see what the differences there are:
+				e2(bd)		e3(gd)		b1(good)
+cont (appish)	1 1 1 1		2 1 2 1		2 1 2 1
+rob (deep)		2 2 1 1		1 2 2 1		1 2 2 1
+remot			2 1 2 2		1 1 1 2		1 1 1 2
+
+Gymno topologies different (what is sister to oya, position of "deep" robertianum, etc).
+So a new batch of misbehaviours! but the former misbehaviours disappeared (entirely), so
+maybe upping the weights on the phasing proposals did the trick? (Also, encouraging that the
+good b run exactly matches the good e run for these ones, and the b1 and e3 topologies are
+identical -- the two disjunctum "individuals" even fall in the same place as the phased tips
+in the b run)
+
