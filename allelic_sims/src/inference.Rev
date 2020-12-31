@@ -71,8 +71,12 @@ for (i in 1:num_loci) {
     # model of molecular evolution
     er_prior[i] <- v(1,1,1,1,1,1)
     er[i] ~ dnDirichlet(er_prior[i])
+    moves[++mvi] = mvSimplexElementScale(er[i], weight=5)
+
     pi_prior[i] <- v(1,1,1,1)
     pi[i] ~ dnDirichlet(pi_prior[i])
+    moves[++mvi] = mvSimplexElementScale(pi[i], weight=5)
+
     Q[i] := fnGTR(er[i], pi[i])
 
     ctmc[i] ~ dnPhyloCTMC(tree=tree, 
@@ -103,12 +107,12 @@ if (bayes_factors) {
 
     pow_p = powerPosterior(mymodel, moves, monitors, out_dir + sim_num + "/.out", 
                            cats=50, sampleFreq=1) 
-    pow_p.burnin(generations=500, tuningInterval=50)
-    pow_p.run(generations=500)  
+    pow_p.burnin(generations=1000, tuningInterval=50)
+    pow_p.run(generations=1000)  
     ss = steppingStoneSampler(file=out_dir + sim_num + "/.out", 
                               powerColumnName="power", likelihoodColumnName="likelihood")
     out_string = sim_num + "," + ss.marginal() + "\n"
-    write(out_string, filename=out_dir + "marginals.csv", append=TRUE) 
+    write(out_string, filename=out_dir + "marginals4.csv", append=TRUE) 
 
 } else {
 
