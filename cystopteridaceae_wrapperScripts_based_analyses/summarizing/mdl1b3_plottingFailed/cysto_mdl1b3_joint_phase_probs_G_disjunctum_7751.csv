@@ -1,0 +1,8 @@
+"G_disjunctum_7751_A","G_disjunctum_7751_B","joint_prob","locus"
+"7751_BLANK","7751_BLANK",0,"APP"
+"7751_copy1","7751_BLANK",0.838093538022135,"APP"
+"7751_BLANK","7751_copy1",0.161906461977865,"APP"
+"7751_copy1","7751_copy1",0,"APP"
+"7751_copy1","7751_copy2",1,"GAP"
+"7751_copy1","7751_copy2",1,"IBR"
+"7751_BLANK","7751_copy1",1,"PGI"

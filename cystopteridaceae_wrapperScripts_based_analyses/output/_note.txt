@@ -29,6 +29,13 @@ Analysis descriptions:
 			-pruned trees logged, but no MCC or MAP produced for them?? (and no error to indicate why not)
 			-the summary trees (for the full tree) look fine! weird
 			
+	mdl1d	-Four runs of mdl1, for 7k iterations
+			-dnUniformTopologyBranchLength, branchlength hyperprior (0.004), but no locus-specific rates
+			
+			-as above - didn't converge, trees look ok, no MCC or MAP produced for the pruned trees
+			
+			
+			
 Summary -- moreorless where we started -- the runs converge to different distributions. Need 
 				to check the phasing to see if there's something going on there that's noticeable			
 Issues 	-- why the weirdness with the MAP and MCC trees in the mdl1 runs?

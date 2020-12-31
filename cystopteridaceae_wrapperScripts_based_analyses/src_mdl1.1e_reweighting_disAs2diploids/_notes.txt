@@ -1,0 +1,6 @@
+Modifying mdl1 to treat G.disjunctum at two diploids (instead of swapping it). Will just 
+treat the copy1s as one individual, and the copy2s as another (although this doesn't agree
+with how they are phased, quite)
+
+Also going to increase the weights on the swaps for C.frag1, C.tas, and G.dry (manually, 
+in the output from Matt's wrapper -- increasing them from w to 10w)

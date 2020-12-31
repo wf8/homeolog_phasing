@@ -1,0 +1,13 @@
+﻿				b1			b4
+frag sp1		2 1 2 1		1 1 2 2 	All max PP; topologies different
+tas										phasing identical, topologies different
+dry (appVers)	2 b 1 2 	2 1 1 2
+dry ("other")	b 1 b b 	b b b 3		gap and pgi max PP in both, topologies very different
+dry (dis1)		b 2 b 1		b 3 b b 	The two dis drys are close topologically, vary across runs
+dry (dis2)		1 3 2 3		1 2 2 1
+dis				1 2 1 b		1 1 1 b		in b1 only IBR max PP, 3loci max in b4
+
+Aside from these cases, even the weak phasing tends to be the same across the two runs
+
+The rate multipliers for these two runs are quite different, with b1 being higher for all three than b4. 
+Maybe removing those parameters will help with convergence
