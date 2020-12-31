@@ -68,10 +68,10 @@ rb revbayes_template.txt
 
 After RevBayes has finished, evaluate the MCMC convergence with standard metrics-- for example, you load the `.log` files into Tracer to examine stationarity and Effective Sample Size (ESS).
 
-If the run has converged, the `summarize_posteriors_new.R` script will evaluate the run for both joint and marginal posterior probabilities of phase inference across loci. The script requires the location of the `genecopymap.csv`:
+If the run has converged, the `summarize_posteriors_new.R` script will evaluate the run for both joint and marginal posterior probabilities of phase inference across loci. The script requires the prefix used in revscript_maker.R (i.e., the prefix part of the phase log files) and the location of the `genecopymap.csv`:
 
 ```
-Rscript --vanilla summarize_posteriors_new.R genecopymap.csv
+Rscript --vanilla summarize_posteriors_new.R prefix genecopymap.csv
 ```
 
 The script will output a joint phase probability file for each multi-tip sample, and a marginal phase probability file for each sample and gene.

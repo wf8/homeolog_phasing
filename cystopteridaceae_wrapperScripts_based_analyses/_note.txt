@@ -1,0 +1,15 @@
+Redoing the Cystopteridaceae analyses with:
+	a) Matt's scripts (to make writing the methods easier?)
+	b) Updated analyses settings (avoiding vague priors), to hopefully get better results 
+	but more importantly, to help the stepping stone analyses converge
+	
+
+For the different runs, need to set the unswapped samples to their own accession, in the copyMap
+except that only handles polyploids, so need to add the dummies to the alignments manually (in rev) 
+before running the homologizer runs. So that they are in the dataset (alongside the diploids). 
+Then I can use the copyMap to treat those sequences as belonging to a polyploid or omit them, 
+in which case they'll be treated as a diploid (ie, theywon't be swapped to)
+
+So created aligns_cystop/ for these new alignments (that include the dummy tip sequences for G.dry
+and C.tas)
+

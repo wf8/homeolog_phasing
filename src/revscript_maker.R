@@ -26,7 +26,7 @@ if(length(args) < 1){
 #genelist = read.table(args[1])
 #genelist = genelist[,1]
 
-genecopymap = read.csv(args[1],header=T)
+genecopymap = read.csv(args[1],header=T,stringsAsFactors=TRUE)
 
 #Genes start in column 3
 numLoci = length(genecopymap) - 2

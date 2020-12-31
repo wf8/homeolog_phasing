@@ -1,0 +1,35 @@
+
+Analysis descriptions:
+	run1	-Four runs of mdl1 (before I renamed "run" to "mdl"), for 7k iterations
+			-treeAssembly, branchlength hyperprior (0.004016), locus-specific rates
+			
+			-each converges to different distribution, run1c is the best
+			-trees look ok, but the MCC and MAP summaries are super weird??
+			-run1a full MCC and MCC of the pruned trees oddly different? Same with run1c (didn't check the others)--
+				-the difference are in the vicinity of the BLANK in the full trees - this a bug of somesort?
+						
+	run2	-Four runs of mdl2 (before I renamed "run" to "mdl"), for 7k iterations
+			-treeAssembly, branchlength hyperprior (0.004016), locus-specific rates
+			
+			-as with run1, converge to different distributions
+			-trees and MCC, MAP, look fine (maybe because this mdl has no entirely-blank non-swapping tips?)
+			
+	mdl1a	-MCMCMC, four chains, one run, mdl1
+			-treeAssembly, branchlength hyperprior (0.004016), locus-specific rates
+			
+			-Didn't do as well as run1c
+			-Summary trees weird (Acystopteris all with ~0 length branches?)
+			-But the individual tree samples look fine??? (so a similar issue to that seen in run1 summary trees)
+			-pruned trees logged, but no MCC or MAP produced for them?? (and no error to indicate why not)
+			
+	mdl1b	-Four runs of mdl1, for 7k iterations
+			-dnUniformTopologyBranchLength, branchlength hyperprior (0.004), locus-specific rates
+			
+			-similar traces to run1, although mdl1b1 slightly outperformed run1c
+			-pruned trees logged, but no MCC or MAP produced for them?? (and no error to indicate why not)
+			-the summary trees (for the full tree) look fine! weird
+			
+Summary -- moreorless where we started -- the runs converge to different distributions. Need 
+				to check the phasing to see if there's something going on there that's noticeable			
+Issues 	-- why the weirdness with the MAP and MCC trees in the mdl1 runs?
+		-- why are there no MAP or MCC trees produced from the pruned trees in the mdl1a and mdl1b runs?
