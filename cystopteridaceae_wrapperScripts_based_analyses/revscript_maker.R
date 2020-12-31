@@ -64,14 +64,24 @@ mv.text = "moves[++mvi] = mvHomeologPhase(ctmc[%d], \"%s\", \"%s\", weight=w)\n"
 subgenomes.by.sample = split(genecopymap$Subgenome,genecopymap$Sample)
 
 make.phase.comb = function(subgenome.samples,geneNum){
-  subgenome.combinations = combn(subgenome.samples,2)
-  apply(subgenome.combinations,2,function(x){
-    sprintf(mv.text,
-            geneNum,
-            genecopymap[x[1],2],
-            genecopymap[x[2],2]
-    )
-  })
+  #subgenome.combinations = combn(subgenome.samples,2)
+  #apply(subgenome.combinations,2,function(x){
+  #  sprintf(mv.text,
+  #          geneNum,
+  #          genecopymap[x[1],2],
+  #          genecopymap[x[2],2]
+  #  )
+  #})
+  out_text = ""
+  for (i in 1:(length(subgenome.samples)-1)) {
+    for (j in (i+1):length(subgenome.samples)) {
+        out_text = paste0(out_text, sprintf(mv.text,
+                                            geneNum,
+                                            subgenome.samples[i],
+                                            subgenome.samples[j]))
+    }
+  }
+  return(out_text)
 }
 
 mv.commands = rep(NA,numLoci*length(subgenomes.by.sample))
