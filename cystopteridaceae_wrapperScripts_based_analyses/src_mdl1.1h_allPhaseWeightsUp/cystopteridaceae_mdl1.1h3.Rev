@@ -1,0 +1,192 @@
+
+## Setting up the Cystopteridaceae mdls using Matt's wrappers (and updating some of the model settings too)
+
+## For the different mdls, need to set the unswapped samples to their own accession, in the copyMap
+## except that only handles polyploids, so need to add the dummies to the alignments manually (in rev) before running the homologizer
+## mdls. So that they are in the dataset (alongside the diploids). Then I can use the copyMap to treat those
+## sequences as belonging to a polyploid or omit them, in which case they'll be treated as a diploid (ie, they
+## won't be swapped to)
+
+## This version uses dnUniformTopologyBranchLength because of the potential bug in treeAssembly
+
+
+
+###### Change these to match the appropriate file names:
+
+mdl = "mdl1"
+run = ".1h3" # So that I can run multiple runs under the same settings (multiple runs of the same model)
+genelist= "../genelist.txt"
+initialPhaseFn = "InitialPhase.rev"
+phaseMovesFn = "PhaseMoves.rev"
+output_file = "../output/" + mdl + run +"/cysto_" + mdl + run # Needs to be run out of a src directory or else the output dir will end up somewhere weird
+
+bayes_factors = FALSE
+mcCubed = FALSE 
+
+###### All other RevBayes parameters can be set below
+alignments = readTable(genelist)
+num_loci = alignments.size()
+
+
+#num_swap = label_swap.size()
+for (i in 1:num_loci) {
+    data[i] = readDiscreteCharacterData(alignments[i][1])
+}
+
+# set initial phase and add dummy tips
+source(initialPhaseFn)
+
+# add missing taxa
+for (i in 1:num_loci) {
+    for (j in 1:num_loci) {
+        data[i].addMissingTaxa(data[j].taxa())
+    }
+}
+
+num_tips = data[1].ntaxa()
+n_branches = 2 * num_tips - 3
+
+
+mvi = 0
+
+# ## The average branchlength in the MCC tree in prelimnary runs is 0.004016298
+# up_down_scale_move = ++mvi # Doing it this weird way so that I can reference this move later
+# moves[up_down_scale_move] = mvUpDownScale(weight=5.0, lambda=0.01)
+
+# branch_length_mean ~ dnExponential(1/0.004016) # Hyperprior with a mean value of 0.004016
+# moves[++mvi] = mvScale(branch_length_mean, lambda=1.0, weight=1.0)
+
+# for (i in 1:n_branches) {
+#     branch_lengths[i] ~ dnExponential(1 / branch_length_mean)
+#     branch_lengths[i].setValue(0.004)
+#     moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=1.0)
+#     # Scale the branches one by one
+#     moves[up_down_scale_move].addVariable(branch_lengths[i], up=true)
+#     # This move scales the branches (and their mean) all at once; helps with mixing early on
+# }
+
+
+# topology ~ dnUniformTopology(data[1].taxa())
+# moves[++mvi] = mvNNI(topology, weight=50.0)
+# moves[++mvi] = mvSPR(topology, weight=50.0)
+
+# tree := treeAssembly(topology, branch_lengths)
+
+
+# prior on branch lengths
+branch_length_mean ~ dnExponential(1/0.004) # The average branchlength in the MCC tree in prelimnary runs is 0.004016298
+moves[++mvi] = mvScale(branch_length_mean, lambda=1.0, weight=1.0)
+bl_dist = dnExponential(1 / branch_length_mean)
+
+# create the tree
+tree ~ dnUniformTopologyBranchLength(data[1].taxa(), bl_dist)
+moves[++mvi] = mvBranchLengthScale(tree, weight=n_branches)
+moves[++mvi] = mvNNI(tree, weight=50.0)
+moves[++mvi] = mvSPR(tree, weight=50.0)
+
+
+# monitor the tree length
+tree_length := tree.treeLength()
+"Tree length: " + tree_length
+
+
+
+for (i in 1:num_loci) {
+    
+    # gtr for each locus
+    er_prior <- v(1,1,1,1,1,1)
+    er[i] ~ dnDirichlet(er_prior)
+    moves[++mvi] = mvSimplexElementScale(er[i], weight=3)
+
+    pi_prior <- v(1,1,1,1)
+    pi[i] ~ dnDirichlet(pi_prior)
+    moves[++mvi] = mvSimplexElementScale(pi[i], weight=3)
+
+    Q[i] := fnGTR(er[i], pi[i])
+
+    # if (i == 1) {
+    #     rate_multiplier[i] <- 1.0
+    # } else {
+    #     rate_multiplier[i] ~ dnExponential(1)
+    #     moves[++mvi] = mvScale(rate_multiplier[i])
+    #     # moves[up_down_scale_move].addVariable(rate_multiplier[i], up=false)
+    #     # Could keep the up_down_scale_move for these multipliers, but can't have it on the branchlengths in this case
+    # }
+
+}
+
+for (i in 1:num_loci) {
+        # ctmc[i] ~ dnPhyloCTMC(tree=tree, Q=Q[i], branchRates=rate_multiplier[i], type="DNA")
+        ctmc[i] ~ dnPhyloCTMC(tree=tree, Q=Q[i], type="DNA")
+        ctmc[i].clamp(data[i])  
+}
+
+
+# make phasing proposals
+w = 6 #Increased this from 0.6 for this run
+source(phaseMovesFn)
+
+
+if(mdl == "mdl1"){
+    pruned_tree := fnPruneTree(tree, prune=v("6379_BLANK2"))
+} # The tip that has all blank sequences, and is never swapped to, will presumably float arun everywhere, so removing it from the trees
+
+if(mdl == "mdl3"){
+    pruned_tree := fnPruneTree(tree, prune=v("7981_BLANK"))
+}
+
+
+mymodel = model(Q)
+
+
+mni = 0
+# The er and pi parameters are in vectors, so won't get logged to the output file; need this workarun here (adding them to a monitor individually)
+monitors[++mni] = mnFile(filename=output_file + "allparams.log", printgen=1)
+for(i in 1:num_loci){
+    monitors[mni].addVariable(er[i])
+    monitors[mni].addVariable(pi[i])
+}
+monitors[++mni] = mnModel(filename=output_file + ".log", printgen=1)
+monitors[++mni] = mnFile(filename=output_file + ".trees", printgen=1, tree)
+monitors[++mni] = mnScreen(printgen=1)
+for (i in 1:num_loci){
+    monitors[++mni] = mnHomeologPhase(filename=output_file + "_gene" + i + "_phase.log", printgen=1, ctmc[i])
+}
+
+if(mdl == "mdl1" | mdl == "mdl3"){
+    monitors[++mni] = mnFile(filename=output_file + "pruned.trees", printgen=1, pruned_tree)
+} # For those cases where there is an entirely blank species tree tip (with no swapping to it), want to log the pruned trees, too
+
+
+if (bayes_factors) {
+    pow_p = powerPosterior(mymodel, moves, monitors, output_file + ".out", cats=50, sampleFreq=1) 
+    pow_p.burnin(generations=1000, tuningInterval=50)
+    pow_p.run(generations=1000)  
+    ss = steppingStoneSampler(file=output_file + ".out", powerColumnName="power", likelihoodColumnName="likelihood")
+    ss.marginal() 
+    q() # CJR - this should work? avoid having the pow_p runs then try to calculate MCC trees etc?
+} else if (mcCubed) {
+	mymcmc = mcmcmc(mymodel, monitors, moves, swapInterval=1, swapInterval2=2, tuneHeat=true, swapMode="multiple")
+	mymcmc.burnin(generations=1000, tuningInterval=10)
+	mymcmc.run(generations=10000)
+	mymcmc.operatorSummary()
+} else {	
+    mymcmc = mcmc(mymodel, monitors, moves)
+    mymcmc.run(generations=1000, tuningInterval=10) # This is the tuning part, but still producing samples for examination. These all need to be thrown out ultimately.
+    mymcmc.operatorSummary()
+    mymcmc.run(generations=6000)
+    mymcmc.operatorSummary()
+ }       
+    
+treetrace = readTreeTrace(output_file + ".trees", treetype="clock", burnin=4/7) # Dropping the 1k tuning plus 3k of the main mdl as burnin
+map_tree = mapTree(treetrace, output_file + "_map.tree")
+mcc_tree = mccTree(treetrace, output_file + "_mcc.tree")
+
+if(mdl == "mdl1" | mdl == "mdl3"){
+    treetrace = readTreeTrace(output_file + "pruned.trees", treetype="clock", burnin=4/7)
+    map_tree = mapTree(treetrace, output_file + "_pruned_map.tree")
+    mcc_tree = mccTree(treetrace, output_file + "_pruned_mcc.tree")
+ # For those cases where there is an entirely blank species tree tip (with no swapping to it), want to log the pruned trees, too
+
+mymcmc.operatorSummary()
+

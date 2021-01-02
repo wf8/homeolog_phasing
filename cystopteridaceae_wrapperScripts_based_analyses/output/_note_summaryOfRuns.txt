@@ -38,6 +38,18 @@ Analysis descriptions:
 			-Weights for the phase parameter moves increased to 10*w for the misbehaving ones (C.frag sp1, C.tas, G.dry)
 			
 			-Didn't converge. 1.1e3 was the best.
+			-The previous misbehavers were all good, but now G.con, rob, and rem are messed up
+			
+	mdl1.1f	-increased weights for G.rem, rob, and con, too
+			-didn't converge. 1.1f4 is the best (bad for 2k generations, then a big jump). next best is 1.1f1, which got good quickly but never made the additional hope to the 1.1f4 distrbution
+	
+	mdl1.1g	-Four runs of mdl1.1, but no locus-specific rates
+			-still didn't converge, but maybe more runs got closer? only one was really off
+			-run2 was the best
+		
+	mdl1.1h -like 1.1g, but with all phase moves upweighted x10
+			-runs super slow, no convergence after 1000 iterations (everyting looks stable it its own distribution)
+			-run1 is best (and better than 1.1g2)
 			
 Summary -- moreorless where we started -- the runs converge to different distributions. Need 
 				to check the phasing to see if there's something going on there that's noticeable			
