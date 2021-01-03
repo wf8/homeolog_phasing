@@ -197,7 +197,7 @@ for (sample in names(samples)) {
     joint_results = rbind(joint_results, joint_results_locus) 
     
     # get the MAP joint phase for the plot
-    map = which(joint_results_locus['joint_prob'] == max(joint_results_locus['joint_prob']))
+    map = which(joint_results_locus['joint_prob'] == max(joint_results_locus['joint_prob']))[1]
     for (tip in samples[[sample]]) {
       #map_prob_results[tip,loci[i]] = joint_results_locus[map, 'joint_prob']
       joint_map_phase_results[tip,loci[i]] = as.character(joint_results_locus[map, tip])
