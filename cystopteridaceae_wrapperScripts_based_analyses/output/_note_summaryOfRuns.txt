@@ -51,6 +51,12 @@ Analysis descriptions:
 			-runs super slow, no convergence after 1000 iterations (everyting looks stable it its own distribution)
 			-run1 is best (and better than 1.1g2)
 			
+	mdl1.2i	-dropped C.frag sp2, in the hope that that would allow better convergence (avoid
+				getting stuck due to interactions between C.frag sp2 and xCysto)
+			-didn't work (each converged to its own distribution, again)
+			
+	mdl1.3j -instead, dropped G.dry and xCysto (all the accessions with >2 subgenomes)
+			
 Summary -- moreorless where we started -- the runs converge to different distributions. Need 
 				to check the phasing to see if there's something going on there that's noticeable			
 Issues 	-- why the weirdness with the MAP and MCC trees in the mdl1 runs?

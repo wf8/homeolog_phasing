@@ -1,0 +1,10 @@
+
+
+mdl = "mdl1"
+run = ".1h1" # So that I can run multiple runs under the same settings (multiple runs of the same model)
+output_file = "cysto_" + mdl + run # Needs to be run out of a src directory or else the output dir will end up somewhere weird
+
+
+treetrace = readTreeTrace(output_file + "pruned.trees", treetype="clock", burnin=4/7)
+map_tree = mapTree(treetrace, output_file + "_pruned_map.tree")
+mcc_tree = mccTree(treetrace, output_file + "_pruned_mcc.tree")

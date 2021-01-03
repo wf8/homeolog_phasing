@@ -1,0 +1,8 @@
+"xCystocarpium_7974_A","xCystocarpium_7974_B","xCystocarpium_7974_C","xCystocarpium_7974_D","joint_prob","locus"
+"7974_copy1","7974_copy2","7974_copy3","7974_copy4",1,"APP"
+"7974_copy2","7974_copy1","7974_copy4","7974_copy3",1,"GAP"
+"7974_copy1","7974_copy2","7974_copy3","7974_copy4",1,"IBR"
+"7974_copy1","7974_copy1","7974_copy4","7974_copy3",0,"PGI"
+"7974_copy2","7974_copy1","7974_copy4","7974_copy3",0.974294894680471,"PGI"
+"7974_copy1","7974_copy2","7974_copy4","7974_copy3",0.0257051053195287,"PGI"
+"7974_copy2","7974_copy2","7974_copy4","7974_copy3",0,"PGI"

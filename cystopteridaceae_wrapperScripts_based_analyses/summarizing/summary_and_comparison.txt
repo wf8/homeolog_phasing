@@ -41,3 +41,21 @@ phased correctly). Fixing this problem would require not only joint topology/pha
 joint across the two accessions?
 
 Should I drop C.frag2 from the analysis?
+
+
+
+mdl1.2i comparisons -- the runs without C.frag sp2
+	2i3 is best, closely followed by 2i4, then by 2i1 and then 2i2
+	
+				2i3		2i4		2i1		2i2
+dry ~app		2b12	2112			2111
+dry "other"		b1bb	bbb3			bbb3	 close to app in i3, deep in i4 and i2
+dry dis1		1321	132b			122b
+dry dis2		b2b3	b2b1			b2b2
+xCys ~app		3434	?				3433
+xCys ~dis		4343	?				4344
+
+
+It looks like dry and xCys get trapped in sync -- in i2 both have a pgiC copy phased to a
+~app tip that is phased to a ~dis tip in i3 (and probably in i4 too, but don't have xCysto
+phasing summarized for that run)

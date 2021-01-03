@@ -1,0 +1,62 @@
+#NEXUS
+
+	Begin taxa;
+	Dimensions ntax=51;
+	Taxlabels
+		A_japonica_7978
+		A_taiwaniana_6137_A
+		A_taiwaniana_6137_B
+		A_tenuisecta_sp1_4831
+		A_tenuisecta_sp2_8704_A
+		A_tenuisecta_sp2_8704_B
+		A_tenuisecta_sp3_8745_A
+		A_tenuisecta_sp3_8745_B
+		C_bulbifera_7650a
+		C_bulbifera_7650b
+		C_diaphana_6380_A
+		C_diaphana_6380_B
+		C_fragilis_sp1_7009_A
+		C_fragilis_sp1_7009_B
+		C_membranifolia_6732
+		C_montana_7943_A
+		C_montana_7943_B
+		C_moupinensis_4861
+		C_pellucida_6055_A
+		C_pellucida_6055_B
+		C_protrusa_6359a
+		C_protrusa_6359b
+		C_sudetica_8674_A
+		C_sudetica_8674_B
+		C_tasmanica_6379_A
+		C_tasmanica_6379_B
+		C_tenuis_6387_A
+		C_tenuis_6387_B
+		C_utahensis_6848_A
+		C_utahensis_6848_B
+		G_appalachianum_7800
+		G_continentale_6979_A
+		G_continentale_6979_B
+		G_disjunctum_7751a
+		G_disjunctum_7751b
+		G_dryopteris_7981_A
+		G_dryopteris_7981_B
+		G_dryopteris_7981_C
+		G_dryopteris_7981_D
+		G_oyamense_sp1_6399a
+		G_oyamense_sp1_6399b
+		G_oyamense_sp2_8739_A
+		G_oyamense_sp2_8739_B
+		G_remotepinnatum_4862_A
+		G_remotepinnatum_4862_B
+		G_robertianum_7945_A
+		G_robertianum_7945_B
+		xCystocarpium_7974_A
+		xCystocarpium_7974_B
+		xCystocarpium_7974_C
+		xCystocarpium_7974_D
+		;
+End;
+
+Begin trees;
+tree TREE1 = [&R]((((((((((((((G_appalachianum_7800[&index=32,age_95%_HPD={0.006278,0.015259}]:0.000682,G_dryopteris_7981_D[&index=48,age_95%_HPD={0.00651,0.015554}]:0.000208)[&index=52,posterior=0.576475,sampled_ancestor=0.005998,age_95%_HPD={0.006728,0.015692}]:0.000742,xCystocarpium_7974_C[&index=46,age_95%_HPD={0.006981,0.015739}]:0.000885)[&index=53,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.008029,0.016584}]:0.002244,(G_continentale_6979_B[&index=15,age_95%_HPD={0.004646,0.014137}]:0.000978,G_dryopteris_7981_A[&index=21,age_95%_HPD={0.004685,0.0146}]:0.000710)[&index=54,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.005916,0.015533}]:0.004044)[&index=55,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.01014,0.018337}]:0.001729,((G_oyamense_sp1_6399a[&index=49,age_95%_HPD={0,0.004491}]:0.002680,G_oyamense_sp1_6399b[&index=12,age_95%_HPD={0,0.00466}]:0.002930)[&index=56,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.001738,0.007059}]:0.008407,(G_oyamense_sp2_8739_A[&index=27,age_95%_HPD={0,0.006701}]:0.003254,G_oyamense_sp2_8739_B[&index=45,age_95%_HPD={0,0.006715}]:0.003313)[&index=57,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.002765,0.009674}]:0.006797)[&index=58,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.009673,0.016207}]:0.003531)[&index=59,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.012597,0.020274}]:0.001253,G_remotepinnatum_4862_A[&index=19,age_95%_HPD={0.004385,0.014589}]:0.008217)[&index=60,posterior=0.534489,sampled_ancestor=0.005998,age_95%_HPD={0.013526,0.021426}]:0.000256,((((G_disjunctum_7751a[&index=42,age_95%_HPD={0.002313,0.013172}]:0.000976,G_dryopteris_7981_C[&index=37,age_95%_HPD={0.004062,0.014677}]:0.000256)[&index=61,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.004194,0.014831}]:0.001599,xCystocarpium_7974_D[&index=47,age_95%_HPD={0.003856,0.014207}]:0.001685)[&index=62,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.005922,0.016042}]:0.003057,(G_disjunctum_7751b[&index=38,age_95%_HPD={0.006183,0.016293}]:0.000968,G_dryopteris_7981_B[&index=40,age_95%_HPD={0.002416,0.013394}]:0.004266)[&index=63,posterior=0.996668,sampled_ancestor=0.005998,age_95%_HPD={0.00775,0.017534}]:0.001289)[&index=64,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.00876,0.018168}]:0.003171,((G_continentale_6979_A[&index=34,age_95%_HPD={0.002315,0.012881}]:0.002451,G_remotepinnatum_4862_B[&index=33,age_95%_HPD={0.003495,0.013697}]:0.001348)[&index=65,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.005052,0.015142}]:0.000988,G_robertianum_7945_B[&index=51,age_95%_HPD={0.003518,0.013791}]:0.002376)[&index=66,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.006115,0.015887}]:0.005972)[&index=67,posterior=0.971676,sampled_ancestor=0.005998,age_95%_HPD={0.012851,0.021385}]:0.000788)[&index=68,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.014029,0.022332}]:0.005834,G_robertianum_7945_A[&index=24,age_95%_HPD={0.007954,0.019517}]:0.009413)[&index=69,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.018684,0.028505}]:0.018013,(((((A_tenuisecta_sp1_4831[&index=26,age_95%_HPD={0,0.029489}]:0.001517,A_tenuisecta_sp3_8745_B[&index=6,age_95%_HPD={0.00212,0.031523}]:0.001674)[&index=70,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.00368,0.033082}]:0.001711,A_tenuisecta_sp2_8704_A[&index=50,age_95%_HPD={0.004494,0.033679}]:0.001427)[&index=71,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.005922,0.034945}]:0.004443,(A_japonica_7978[&index=35,age_95%_HPD={0.004194,0.032816}]:0.003990,A_taiwaniana_6137_B[&index=25,age_95%_HPD={0.005329,0.034194}]:0.002254)[&index=72,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.009592,0.038397}]:0.001760)[&index=73,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.010859,0.039633}]:0.001608,(A_taiwaniana_6137_A[&index=18,age_95%_HPD={0.008404,0.036885}]:0.000741,A_tenuisecta_sp3_8745_A[&index=9,age_95%_HPD={0.009224,0.037557}]:0.000475)[&index=74,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.010472,0.038869}]:0.002599)[&index=75,posterior=0.567144,sampled_ancestor=0.005998,age_95%_HPD={0.011315,0.039957}]:0.000713,A_tenuisecta_sp2_8704_B[&index=3,age_95%_HPD={0.005815,0.034204}]:0.006075)[&index=76,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.012115,0.040495}]:0.015129)[&index=77,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.031175,0.050886}]:0.010144,(C_montana_7943_A[&index=10,age_95%_HPD={0.027938,0.050783}]:0.003925,C_montana_7943_B[&index=7,age_95%_HPD={0.028274,0.050618}]:0.003805)[&index=78,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.032386,0.054722}]:0.006951)[&index=79,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.040094,0.061708}]:0.002657,((C_bulbifera_7650a[&index=14,age_95%_HPD={0.028852,0.052892}]:0.000969,C_utahensis_6848_A[&index=36,age_95%_HPD={0.030218,0.053048}]:0.000856)[&index=80,posterior=0.946684,sampled_ancestor=0.005998,age_95%_HPD={0.032408,0.05503}]:0.002425,C_bulbifera_7650b[&index=28,age_95%_HPD={0.03342,0.056771}]:0.001400)[&index=81,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.034273,0.057637}]:0.008202)[&index=82,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.043001,0.064576}]:0.002362,((((((((C_diaphana_6380_A[&index=29,age_95%_HPD={0.020201,0.044517}]:0.001630,C_diaphana_6380_B[&index=1,age_95%_HPD={0.019816,0.043224}]:0.001876)[&index=83,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.021929,0.045154}]:0.001587,(C_membranifolia_6732[&index=16,age_95%_HPD={0.020644,0.044167}]:0.002490,C_utahensis_6848_B[&index=8,age_95%_HPD={0.018754,0.041955}]:0.004045)[&index=84,posterior=0.907031,sampled_ancestor=0.005998,age_95%_HPD={0.022531,0.04581}]:0.000784)[&index=85,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.023554,0.046795}]:0.003740,C_fragilis_sp1_7009_B[&index=41,age_95%_HPD={0.023347,0.047125}]:0.004515)[&index=86,posterior=0.990670,sampled_ancestor=0.005998,age_95%_HPD={0.027009,0.050485}]:0.002373,C_tasmanica_6379_B[&index=39,age_95%_HPD={0.021732,0.045815}]:0.007949)[&index=87,posterior=0.546818,sampled_ancestor=0.005998,age_95%_HPD={0.031924,0.052407}]:0.002549,((C_fragilis_sp1_7009_A[&index=43,age_95%_HPD={0.013119,0.038653}]:0.006048,xCystocarpium_7974_A[&index=44,age_95%_HPD={0.015453,0.040097}]:0.003595)[&index=88,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.019477,0.043377}]:0.005344,C_tenuis_6387_B[&index=17,age_95%_HPD={0.01962,0.042395}]:0.005027)[&index=89,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.024665,0.048092}]:0.007228)[&index=90,posterior=0.546151,sampled_ancestor=0.005998,age_95%_HPD={0.034251,0.054725}]:0.001674,xCystocarpium_7974_B[&index=23,age_95%_HPD={0.026175,0.048996}]:0.008376)[&index=91,posterior=0.546818,sampled_ancestor=0.005998,age_95%_HPD={0.035085,0.055436}]:0.001139,C_tasmanica_6379_A[&index=31,age_95%_HPD={0.012817,0.045984}]:0.018173)[&index=92,posterior=0.944685,sampled_ancestor=0.005998,age_95%_HPD={0.034982,0.059516}]:0.003505,((C_protrusa_6359a[&index=30,age_95%_HPD={0.025466,0.047856}]:0.001624,C_tenuis_6387_A[&index=2,age_95%_HPD={0.024605,0.047381}]:0.001893)[&index=93,posterior=0.411863,sampled_ancestor=0.005998,age_95%_HPD={0.026848,0.048351}]:0.000496,C_protrusa_6359b[&index=4,age_95%_HPD={0.022422,0.045276}]:0.004290)[&index=94,posterior=1.000000,sampled_ancestor=0.005998,age_95%_HPD={0.02725,0.049676}]:0.012058)[&index=95,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.03902,0.061469}]:0.005376)[&index=96,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.044478,0.066658}]:0.005236,C_sudetica_8674_B[&index=13,age_95%_HPD={0.041604,0.064528}]:0.007186)[&index=97,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.049139,0.071126}]:0.003224,(C_moupinensis_4861[&index=20,age_95%_HPD={0.046553,0.070117}]:0.002974,C_sudetica_8674_A[&index=5,age_95%_HPD={0.045729,0.068012}]:0.004757)[&index=98,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.050558,0.072965}]:0.001740)[&index=99,posterior=0.993002,sampled_ancestor=0.005998,age_95%_HPD={0.052645,0.074785}]:0.006312,C_pellucida_6055_A[&index=22,age_95%_HPD={0.056329,0.079371}]:0.003022,C_pellucida_6055_B[&index=11,age_95%_HPD={0.055971,0.078657}]:0.003087)[&index=100,posterior=0.994002,sampled_ancestor=0.005998,age_95%_HPD={0.059878,0.082557}]:0.000000;
+End;

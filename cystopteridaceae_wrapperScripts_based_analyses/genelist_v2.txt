@@ -1,0 +1,4 @@
+/Users/carlrothfels/Box Sync/R_Python_etal/git_repositories/homologizer/cystopteridaceae_wrapperScripts_based_analyses/aligns_cystop/v2/APP_toHomologizer.nex
+/Users/carlrothfels/Box Sync/R_Python_etal/git_repositories/homologizer/cystopteridaceae_wrapperScripts_based_analyses/aligns_cystop/v2/GAP_toHomologizer.nex
+/Users/carlrothfels/Box Sync/R_Python_etal/git_repositories/homologizer/cystopteridaceae_wrapperScripts_based_analyses/aligns_cystop/v2/IBR_toHomologizer.nex
+/Users/carlrothfels/Box Sync/R_Python_etal/git_repositories/homologizer/cystopteridaceae_wrapperScripts_based_analyses/aligns_cystop/v2/PGI_toHomologizer.nex
