@@ -1,0 +1,8 @@
+"C_tasmanica_6379_A","C_tasmanica_6379_B","joint_prob","locus"
+"6379_copy1","6379_copy2",1,"APP"
+"6379_copy1","6379_copy1",0,"GAP"
+"6379_copy2","6379_copy1",0.660299892895394,"GAP"
+"6379_copy1","6379_copy2",0.339700107104606,"GAP"
+"6379_copy2","6379_copy2",0,"GAP"
+"6379_copy1","6379_BLANK",1,"IBR"
+"6379_copy1","6379_copy2",1,"PGI"

@@ -1,9 +1,9 @@
 
-genecopyFn='cystopteridaceae_copyMap.csv'
-tree_file = 'cystopteridaceae.tree'
+genecopyFn='../cystopteridaceae_copyMap_mdl1.3.csv'
+tree_file = 'cysto_mdl1.3j4_pruned_mcc_rooted.tree'
 input_dir = './'
 output_dir = './'
-prefix = 'cystopteridaceae'
+prefix = 'cysto_mdl1.3j4'
 
 library(ggplot2)
 library(plyr)

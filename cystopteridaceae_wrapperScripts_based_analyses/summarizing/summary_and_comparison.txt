@@ -59,3 +59,33 @@ xCys ~dis		4343	?				4344
 It looks like dry and xCys get trapped in sync -- in i2 both have a pgiC copy phased to a
 ~app tip that is phased to a ~dis tip in i3 (and probably in i4 too, but don't have xCysto
 phasing summarized for that run)
+
+
+
+mdl1.3j comparisons -- the runs without G.dry or xCysto
+	j1 best, then j3 closely followed by j4. j2 started really bad but jumped up to the j1 distribution at ~4.5k iterations
+	
+				j1		j3		j4
+frag sp2 ~ten	2212	1212	1212
+frag sp1 ~ten	2121	1122	2122	topologies differ
+tas				1211	1211	1211	topologies differ
+
+Outside of the C.frag complex, topologies and phasings are identical across runs
+
+
+
+
+
+
+
+
+
+Aside -- the G.dryopteris PGIC copy3 seems weird -- it's the one that sometime ends up by
+itself off in the ether with a bunch of blanks. Maybe this copy should be removed? Inspecting
+the genetree, this is indeed a weird sequence, that falls in a weird place. Bunch of autapomorphies
+that aren't present elsewhere in Gymnocarpium. But also, maybe this is time for the Glory
+of Homologizer -- if it can indeed isolate that copy by itself when given the option...
+(so maybe run i3 isn't ideal -- it got the xCysto/G.dry phasing sorted out, but didn't get
+the pgiC copy3 G.dry by itself. If so, why not?)
+
+
