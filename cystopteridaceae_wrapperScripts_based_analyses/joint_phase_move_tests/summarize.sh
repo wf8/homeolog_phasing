@@ -1,0 +1,4 @@
+Rscript summarize_posteriors_new.R output/run1a/cysto_ cystopteridaceae_copyMap_run1.1.csv
+Rscript summarize_posteriors_new.R output/run1b/cysto_ cystopteridaceae_copyMap_run1.1.csv
+Rscript summarize_posteriors_new.R output/run1c/cysto_ cystopteridaceae_copyMap_run1.1.csv
+Rscript summarize_posteriors_new.R output/run1d/cysto_ cystopteridaceae_copyMap_run1.1.csv
