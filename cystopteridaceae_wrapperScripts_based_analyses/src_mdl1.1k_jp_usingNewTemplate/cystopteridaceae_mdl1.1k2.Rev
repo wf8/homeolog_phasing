@@ -12,7 +12,7 @@
 ###### Change these to match the appropriate file names:
 
 mdl = "mdl1" # To indicate different models (in this case, different numbers of tips assigned to the polyploids)
-run = "k" # So that I can run multiple runs under the same settings (multiple runs of the same model)
+run = ".1k2_jp" # So that I can run multiple runs under the same settings (multiple runs of the same model)
 genelist= "../genelist.txt"
 initialPhaseFn = "InitialPhase.rev"
 phaseMovesFn = "PhaseMoves.rev"
@@ -164,9 +164,9 @@ if (bayes_factors) {
 	mymcmc.operatorSummary()
 } else {	
     mymcmc = mcmc(mymodel, monitors, moves)
-    mymcmc.run(generations=1000, tuningInterval=10) # This is the tuning part, but still producing samples for examination. These all need to be thrown out ultimately.
+    mymcmc.run(generations=1000, tuningInterval=10, underPrior=TRUE) # This is the tuning part, but still producing samples for examination. These all need to be thrown out ultimately.
     mymcmc.operatorSummary()
-    mymcmc.run(generations=6000)
+    mymcmc.run(generations=6000, underPrior=TRUE)
     mymcmc.operatorSummary()
  }       
     

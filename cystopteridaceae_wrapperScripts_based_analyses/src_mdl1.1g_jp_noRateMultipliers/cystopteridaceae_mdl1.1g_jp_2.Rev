@@ -7,38 +7,36 @@
 ## sequences as belonging to a polyploid or omit them, in which case they'll be treated as a diploid (ie, they
 ## won't be swapped to)
 
+## This version uses dnUniformTopologyBranchLength because of the potential bug in treeAssembly
+
 
 
 ###### Change these to match the appropriate file names:
 
-mdl = "mdl1" # To indicate different models (in this case, different numbers of tips assigned to the polyploids)
-run = "k" # So that I can run multiple runs under the same settings (multiple runs of the same model)
+mdl = "mdl1"
+run = ".1g_jp_2" # So that I can run multiple runs under the same settings (multiple runs of the same model)
 genelist= "../genelist.txt"
 initialPhaseFn = "InitialPhase.rev"
 phaseMovesFn = "PhaseMoves.rev"
-output_file = "../output/" + mdl + "/" + mdl + run + "/cysto_" + mdl + run 
-## This output_file format stores the output for each run in its own directory, nested within a mdl directory
-## In this case, the template file needs to be run out of a src directory or something like that or else the output dir will end up somewhere weird
+output_file = "../output/" + mdl + run +"/cysto_" + mdl + run # Needs to be run out of a src directory or else the output dir will end up somewhere weird
 
-
-bayes_factors = FALSE # Set to TRUE to run stepping stone analyses
-mcCubed = FALSE # Set to TRUE to run MCMCMC (four chains)
-
+bayes_factors = FALSE
+mcCubed = FALSE 
 
 ###### All other RevBayes parameters can be set below
 alignments = readTable(genelist)
 num_loci = alignments.size()
 
 
+#num_swap = label_swap.size()
 for (i in 1:num_loci) {
     data[i] = readDiscreteCharacterData(alignments[i][1])
 }
 
-## Set initial phase and add dummy tips
+# set initial phase and add dummy tips
 source(initialPhaseFn)
 
-
-# Add missing taxa to each locus
+# add missing taxa
 for (i in 1:num_loci) {
     for (j in 1:num_loci) {
         data[i].addMissingTaxa(data[j].taxa())
@@ -49,36 +47,48 @@ num_tips = data[1].ntaxa()
 n_branches = 2 * num_tips - 3
 
 
-mvi = 0 # Creating an index (counter) for the moves
+mvi = 0
 
-# The average branchlength in the MCC tree in prelimnary runs is 0.004016298
-up_down_scale_move = ++mvi # Doing it this weird way so that we can reference this move later
-moves[up_down_scale_move] = mvUpDownScale(weight=5.0, lambda=0.01)
+# ## The average branchlength in the MCC tree in prelimnary runs is 0.004016298
+# up_down_scale_move = ++mvi # Doing it this weird way so that I can reference this move later
+# moves[up_down_scale_move] = mvUpDownScale(weight=5.0, lambda=0.01)
 
 # branch_length_mean ~ dnExponential(1/0.004016) # Hyperprior with a mean value of 0.004016
 # moves[++mvi] = mvScale(branch_length_mean, lambda=1.0, weight=1.0)
-# For simplicity's sake, going to drop the hyperprior 
 
-branch_length_mean <- 0.004016 
+# for (i in 1:n_branches) {
+#     branch_lengths[i] ~ dnExponential(1 / branch_length_mean)
+#     branch_lengths[i].setValue(0.004)
+#     moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=1.0)
+#     # Scale the branches one by one
+#     moves[up_down_scale_move].addVariable(branch_lengths[i], up=true)
+#     # This move scales the branches (and their mean) all at once; helps with mixing early on
+# }
 
-for (i in 1:n_branches) {
-    branch_lengths[i] ~ dnExponential(1 / branch_length_mean)
-    branch_lengths[i].setValue(branch_length_mean) # Starting each branch off at 0.004
-    moves[++mvi] = mvScale(branch_lengths[i], lambda=1.0, weight=1.0) # Scale the branches one by one
-    moves[up_down_scale_move].addVariable(branch_lengths[i], up=true) # This move scales the branches (and their mean) all at once; helps with mixing early on
-}
+
+# topology ~ dnUniformTopology(data[1].taxa())
+# moves[++mvi] = mvNNI(topology, weight=50.0)
+# moves[++mvi] = mvSPR(topology, weight=50.0)
+
+# tree := treeAssembly(topology, branch_lengths)
 
 
-topology ~ dnUniformTopology(data[1].taxa())
-moves[++mvi] = mvNNI(topology, weight=50.0)
-moves[++mvi] = mvSPR(topology, weight=50.0)
+# prior on branch lengths
+branch_length_mean ~ dnExponential(1/0.004) # The average branchlength in the MCC tree in prelimnary runs is 0.004016298
+moves[++mvi] = mvScale(branch_length_mean, lambda=1.0, weight=1.0)
+bl_dist = dnExponential(1 / branch_length_mean)
 
-tree := treeAssembly(topology, branch_lengths)
+# create the tree
+tree ~ dnUniformTopologyBranchLength(data[1].taxa(), bl_dist)
+moves[++mvi] = mvBranchLengthScale(tree, weight=n_branches)
+moves[++mvi] = mvNNI(tree, weight=50.0)
+moves[++mvi] = mvSPR(tree, weight=50.0)
 
 
 # monitor the tree length
 tree_length := tree.treeLength()
 "Tree length: " + tree_length
+
 
 
 for (i in 1:num_loci) {
@@ -94,13 +104,13 @@ for (i in 1:num_loci) {
 
     Q[i] := fnGTR(er[i], pi[i])
 
-    ## Not using locus-specific rates in this case
     # if (i == 1) {
     #     rate_multiplier[i] <- 1.0
     # } else {
     #     rate_multiplier[i] ~ dnExponential(1)
     #     moves[++mvi] = mvScale(rate_multiplier[i])
-    #     moves[up_down_scale_move].addVariable(rate_multiplier[i], up=false)
+    #     # moves[up_down_scale_move].addVariable(rate_multiplier[i], up=false)
+    #     # Could keep the up_down_scale_move for these multipliers, but can't have it on the branchlengths in this case
     # }
 
 }
@@ -113,7 +123,7 @@ for (i in 1:num_loci) {
 
 
 # make phasing proposals
-w = 1
+w = .6
 source(phaseMovesFn)
 
 
@@ -129,15 +139,13 @@ if(mdl == "mdl3"){
 mymodel = model(Q)
 
 
-mni = 0 # An index for the monitors
-
+mni = 0
 # The er and pi parameters are in vectors, so won't get logged to the output file; need this workarun here (adding them to a monitor individually)
 monitors[++mni] = mnFile(filename=output_file + "allparams.log", printgen=1)
 for(i in 1:num_loci){
     monitors[mni].addVariable(er[i])
     monitors[mni].addVariable(pi[i])
 }
-
 monitors[++mni] = mnModel(filename=output_file + ".log", printgen=1)
 monitors[++mni] = mnFile(filename=output_file + ".trees", printgen=1, tree)
 monitors[++mni] = mnScreen(printgen=1)
@@ -164,9 +172,9 @@ if (bayes_factors) {
 	mymcmc.operatorSummary()
 } else {	
     mymcmc = mcmc(mymodel, monitors, moves)
-    mymcmc.run(generations=1000, tuningInterval=10) # This is the tuning part, but still producing samples for examination. These all need to be thrown out ultimately.
+    mymcmc.run(generations=1000, tuningInterval=10, underPrior=TRUE) # This is the tuning part, but still producing samples for examination. These all need to be thrown out ultimately.
     mymcmc.operatorSummary()
-    mymcmc.run(generations=6000)
+    mymcmc.run(generations=6000, underPrior = TRUE)
     mymcmc.operatorSummary()
  }       
     
@@ -179,8 +187,6 @@ if(mdl == "mdl1" | mdl == "mdl3"){
     map_tree = mapTree(treetrace, output_file + "_pruned_map.tree")
     mcc_tree = mccTree(treetrace, output_file + "_pruned_mcc.tree")
  # For those cases where there is an entirely blank species tree tip (with no swapping to it), want to log the pruned trees, too
-}
 
 mymcmc.operatorSummary()
 
-q()

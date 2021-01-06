@@ -12,7 +12,7 @@
 ###### Change these to match the appropriate file names:
 
 mdl = "mdl1" # To indicate different models (in this case, different numbers of tips assigned to the polyploids)
-run = "k" # So that I can run multiple runs under the same settings (multiple runs of the same model)
+run = ".1k2" # So that I can run multiple runs under the same settings (multiple runs of the same model)
 genelist= "../genelist.txt"
 initialPhaseFn = "InitialPhase.rev"
 phaseMovesFn = "PhaseMoves.rev"

@@ -1,0 +1,4 @@
+updated the template, back to the old tree assembly approach (since it appears to be bug-free),
+and with the hyperprior removed.
+
+Hope that this will help with mixing under the prior

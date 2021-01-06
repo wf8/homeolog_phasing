@@ -56,6 +56,13 @@ Analysis descriptions:
 			-didn't work (each converged to its own distribution, again)
 			
 	mdl1.3j -instead, dropped G.dry and xCysto (all the accessions with >2 subgenomes)
+	
+	mdl1.1k and k_jp	-went back to the original way of assembling the tree
+						-dropped the hyperprior
+						
+						-runs well under the prior now!
+						-runs w data still not converging. killed them midway, but could calculate MCC trees and compare them, if desired
+	
 			
 Summary -- moreorless where we started -- the runs converge to different distributions. Need 
 				to check the phasing to see if there's something going on there that's noticeable			
