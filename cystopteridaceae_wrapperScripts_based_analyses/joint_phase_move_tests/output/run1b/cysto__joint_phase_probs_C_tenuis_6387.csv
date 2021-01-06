@@ -1,0 +1,8 @@
+"C_tenuis_6387_A","C_tenuis_6387_B","joint_prob","locus"
+"6387_copy1","6387_copy2",1,"APP"
+"6387_copy1","6387_copy2",1,"GAP"
+"6387_copy1","6387_copy2",1,"IBR"
+"6387_copy1","6387_copy1",0,"PGI"
+"6387_copy2","6387_copy1",1,"PGI"
+"6387_copy1","6387_copy2",0,"PGI"
+"6387_copy2","6387_copy2",0,"PGI"

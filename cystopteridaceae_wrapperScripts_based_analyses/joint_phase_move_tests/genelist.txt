@@ -1,0 +1,4 @@
+../aligns_cystop/APP_toHomologizer.nex
+../aligns_cystop/GAP_toHomologizer.nex
+../aligns_cystop/IBR_toHomologizer.nex
+../aligns_cystop/PGI_toHomologizer.nex
