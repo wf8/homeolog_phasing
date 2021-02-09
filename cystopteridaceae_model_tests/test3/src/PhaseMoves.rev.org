@@ -1,0 +1,78 @@
+w = 2
+ moves[++mvi] = mvHomeologPhase(ctmc[1], "C_tasmanica_6379_A", "C_tasmanica_6379_B", weight=w)
+ moves[++mvi] = mvHomeologPhase(ctmc[1], "G_dryopteris_7981_A", "G_dryopteris_7981_B", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[1], "G_dryopteris_7981_A", "G_dryopteris_7981_C", weight=w)
+MOves[++mvi] = mvHomeologPhase(ctmc[1], "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[1], "G_dryopteris_7981_B", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[1], "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[1], "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+ moves[++mvi] = mvHomeologPhase(ctmc[2], "C_tasmanica_6379_A", "C_tasmanica_6379_B", weight=w)
+ moves[++mvi] = mvHomeologPhase(ctmc[2], "G_dryopteris_7981_A", "G_dryopteris_7981_B", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[2], "G_dryopteris_7981_A", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[2], "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[2], "G_dryopteris_7981_B", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[2], "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[2], "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+ moves[++mvi] = mvHomeologPhase(ctmc[3], "C_tasmanica_6379_A", "C_tasmanica_6379_B", weight=w)
+ moves[++mvi] = mvHomeologPhase(ctmc[3], "G_dryopteris_7981_A", "G_dryopteris_7981_B", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[3], "G_dryopteris_7981_A", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[3], "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[3], "G_dryopteris_7981_B", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[3], "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[3], "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+ moves[++mvi] = mvHomeologPhase(ctmc[4], "C_tasmanica_6379_A", "C_tasmanica_6379_B", weight=w)
+ moves[++mvi] = mvHomeologPhase(ctmc[4], "G_dryopteris_7981_A", "G_dryopteris_7981_B", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[4], "G_dryopteris_7981_A", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[4], "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[4], "G_dryopteris_7981_B", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[4], "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologPhase(ctmc[4], "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+
+for (i in 1:4) {
+for (j in 1:4) {
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_B", 
+                                            "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_C", 
+                                            "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_D", 
+                                            "G_dryopteris_7981_B", "G_dryopteris_7981_C", weight=w)
+if (i != j) {
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_B", 
+                                            "G_dryopteris_7981_A", "G_dryopteris_7981_B", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_C", 
+                                            "G_dryopteris_7981_A", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_D", 
+                                            "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_B", "G_dryopteris_7981_C", 
+                                            "G_dryopteris_7981_B", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_B", "G_dryopteris_7981_D", 
+                                            "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_C", "G_dryopteris_7981_D", 
+                                            "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+}
+
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_B", "G_dryopteris_7981_A", 
+                                            "G_dryopteris_7981_A", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_B", "G_dryopteris_7981_A", 
+                                            "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_C", "G_dryopteris_7981_A", 
+                                            "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_B", 
+                                            "G_dryopteris_7981_B", "G_dryopteris_7981_C", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_B", 
+                                            "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_C", "G_dryopteris_7981_B", 
+                                            "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_C", 
+                                            "G_dryopteris_7981_C", "G_dryopteris_7981_B", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_C", 
+                                            "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_B", "G_dryopteris_7981_C", 
+                                            "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_A", "G_dryopteris_7981_D", 
+                                            "G_dryopteris_7981_D", "G_dryopteris_7981_B", weight=w)
+moves[++mvi] = mvHomeologJointPhase(ctmc[i], ctmc[j], "G_dryopteris_7981_B", "G_dryopteris_7981_D", 
+                                            "G_dryopteris_7981_D", "G_dryopteris_7981_C", weight=w)
+
+}
+}

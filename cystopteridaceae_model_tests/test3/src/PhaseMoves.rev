@@ -1,0 +1,19 @@
+for (i in 1:4) {
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_B", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_C", weight=w)
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_B", "G_dryopteris_7981_C", weight=w)
+    if (model == 2) {
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+    }
+    if (model == 3) {
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_D", weight=w)
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_B", "G_dryopteris_7981_D", weight=w)
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_C", "G_dryopteris_7981_D", weight=w)
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_A", "G_dryopteris_7981_E", weight=w)
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_B", "G_dryopteris_7981_E", weight=w)
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_C", "G_dryopteris_7981_E", weight=w)
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "G_dryopteris_7981_D", "G_dryopteris_7981_E", weight=w)
+    }
+}
