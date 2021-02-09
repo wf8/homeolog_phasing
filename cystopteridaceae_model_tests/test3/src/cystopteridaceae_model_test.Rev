@@ -29,13 +29,6 @@ for (i in 1:num_loci) {
 }
 
 for (i in 1:num_loci) {
-    if (model == 1) {
-        data[i].removeTaxa("G_dryopteris_7981_D")
-        data[i].removeTaxa("G_dryopteris_7981_E")
-    }
-    if (model == 2) {
-        data[i].removeTaxa("G_dryopteris_7981_E")
-    }
     data[i].removeTaxa("C_tasmanica_6379_A")
     data[i].removeTaxa("C_tasmanica_6379_B")
     data[i].removeTaxa("C_tasmanica_6379_C")

@@ -35,9 +35,6 @@ for (i in 1:num_loci) {
     data[i].removeTaxa("G_disjunctum_7751_A")
     data[i].removeTaxa("G_disjunctum_7751_B")
     data[i].removeTaxa("G_disjunctum_7751_C")
-    if (model == 1) {
-        data[i].removeTaxa("C_tasmanica_6379_C")
-    }
 }
 
 num_tips = data[1].ntaxa()
