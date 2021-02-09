@@ -1,0 +1,7 @@
+for (i in 1:4) {
+    moves[++mvi] = mvHomeologPhase(ctmc[i], "C_tasmanica_6379_A", "C_tasmanica_6379_B", weight=w)
+    if (model == 2) {
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "C_tasmanica_6379_A", "C_tasmanica_6379_C", weight=w)
+        moves[++mvi] = mvHomeologPhase(ctmc[i], "C_tasmanica_6379_B", "C_tasmanica_6379_C", weight=w)
+    }
+}
