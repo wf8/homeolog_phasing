@@ -1,0 +1,18 @@
+# need to drop 6379_BLANK2 tip from all trees in tree trace before making MAP/MCC summary trees...
+
+run = 2
+output_file = "output_" + run + "/"
+
+treetrace = readTreeTrace(output_file + ".trees", treetype="non-clock", burnin=0.25) 
+
+for (t in 1:treetrace.size()) {
+    tree = treetrace.getTree(t)
+    # make sure tree is not rooted on 6379_BLANK2 before dropping it
+    tree.reroot("C_pellucida_6055_A")
+    tree.dropTip("6379_BLANK2")
+    trees[t] = tree
+}
+new_trace = treeTrace(trees, burnin=0.25)
+map_tree = mapTree(new_trace, output_file + "new_map.tree")
+mcc_tree = mccTree(new_trace, output_file + "new_mcc.tree")
+
